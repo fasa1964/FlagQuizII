@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>png/menu.png</file>
+        <file>png/ok.png</file>
+        <file>png/close.png</file>
+        <file>FErrorMessage.qml</file>
+    </qresource>
+</RCC>

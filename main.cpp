@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#include <finitgame.h>
 
 int main(int argc, char *argv[])
 {
@@ -10,6 +11,9 @@ int main(int argc, char *argv[])
     app.setApplicationVersion("2.0");
     app.setOrganizationName("qtexample@flagquizII");
     app.setOrganizationDomain("qtexample@flagquizII.com");
+
+    qmlRegisterType<FInitGame>("FInitGame", 1, 0, "Init");
+
 
     QQmlApplicationEngine engine;
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,

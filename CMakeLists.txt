@@ -11,12 +11,17 @@ qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(appFlagQuizII
     main.cpp
+    finitgame.h finitgame.cpp
 )
 
 qt_add_qml_module(appFlagQuizII
     URI FlagQuizII
     VERSION 2.0
-    QML_FILES Main.qml
+    QML_FILES
+    Main.qml
+    FButton.qml
+    FErrorMessage.qml
+    images.qrc
 )
 
 set_target_properties(appFlagQuizII PROPERTIES
