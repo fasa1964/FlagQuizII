@@ -6,9 +6,10 @@ Rectangle{
     width: parent.width-100
     height: 150
     anchors.centerIn: parent
-    color: "transparent"
+    color: "#263238"
     border.color: "white"
     border.width: 0.5
+    z:2
 
     property string errortext: "My errortext"
 

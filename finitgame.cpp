@@ -44,7 +44,7 @@ FInitGame::FInitGame(QObject *parent)
 void FInitGame::checkGameData()
 {
 
-
+    // Check for file 'codes.json' 'world.json' and 'data.json'
     foreach (QString s, fileMap.keys()) {
 
         QFile file(s);
@@ -52,34 +52,41 @@ void FInitGame::checkGameData()
             downloadQueue.enqueue(fileMap.value(s));
         }
     }
-}
 
+
+    QFile file("codes.json");
+    if(file.exists() && getFlagsCount() == 0){
+        if(!generateFlagsForDownloading()){
+            emit errorMessage(tr("Sorry, failed to create URL's for flags!"));
+            return;
+        }
+    }
+
+    if(file.exists() &&  getFlagsCount() < getAvailableFlags()){
+        emit errorMessage(tr("Some flags are missing!"));
+        if(!generateFlagsForDownloading()){
+            emit errorMessage(tr("Sorry, failed to create URL's for flags!"));
+            return;
+        }else{
+            if(!downloadQueue.isEmpty()){
+                setSetup(true);
+            }
+        }
+    }
+
+    if(!downloadQueue.isEmpty()){
+        setSetup(true);
+    }
+
+}
 
 void FInitGame::cancelDownloading()
 {
-    emit errorMessage(tr("Cancel downloading!"));
+    if(!downloadQueue.isEmpty()){
+        downloadQueue.clear();
+        emit errorMessage(tr("Cancel downloading game data's!"));
+    }
 }
-
-
-
-//void FInitGame::startDownload(const QString &filename)
-//{
-//    checkNetworkState();
-
-//    if(!online()){
-//        emit errorMessage(tr("You are offline."));
-//        return;
-//    }
-
-//    if(!sslSupport()){
-//        emit errorMessage(tr("Your device does not support ssl!"));
-//        return;
-//    }
-
-//    QUrl url = fileMap.value(filename);
-//    download(url);
-
-//}
 
 void FInitGame::startDownloadGameDatas()
 {
@@ -95,19 +102,16 @@ void FInitGame::startDownloadGameDatas()
         return;
     }
 
-    setSetup(true);
+
 
     if(!downloadQueue.isEmpty()){
+        setSetup(true);
         QUrl url = downloadQueue.dequeue();
         download(url);
     }
 
 }
 
-//void FInitGame::startDownloadAllFlags()
-//{
-//    qDebug() << "Download all flags!";
-//}
 //!--------------------------------------
 
 // QML properties
@@ -154,10 +158,8 @@ void FInitGame::setCurrentFile(const QString &newCurrentFile)
 // Signal from QNetworkReply
 void FInitGame::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
-
     quint64 kb = bytesReceived / 1000.0;
     setKilobytes(kb);
-
 }
 
 void FInitGame::downloadFinished()
@@ -180,6 +182,7 @@ void FInitGame::downloadFinished()
 
         QUrl url = downloadQueue.dequeue();
         download(url);
+        setFlagsCount( getFlagsCount() );
 
     }
 
@@ -191,20 +194,6 @@ void FInitGame::downloadFinished()
             return;
         }
     }
-
-//    if(file.exists()){
-//        setFileDownloaded(true);
-//        emit appendDownloadedFile(currentFile());
-
-//        if(m_currentFile == "codes.json"){
-
-//            if(!generateFlagsForDownloading())
-//                emit errorMessage(tr("Failed to create flags url's for downloading!"));
-//        }
-
-
-//    }else
-//        setFileDownloaded(false);
 
 }
 
@@ -306,6 +295,43 @@ int FInitGame::getFlagsCount()
     return list.count();
 }
 
+int FInitGame::getAvailableFlags()
+{
+    int count = 0;
+
+    QFile file("codes.json");
+
+    if (!file.open(QIODevice::ReadOnly)) {
+        QString f = file.fileName();
+        QString e = file.errorString();
+        QString text = QString("Could not open %1 for reading: %2").arg(f, f.size() ).arg(e, e.size());
+        emit errorMessage(text);
+        return count;
+    }
+
+    QTextStream file_text(&file);
+    QString jsonString = file_text.readAll();
+
+    file.close();
+
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonString.toUtf8());
+
+    if(jsonDoc.isNull())
+        return count;
+
+    if(jsonDoc.isArray())
+        return count;
+
+    if(jsonDoc.isObject()){
+        QJsonObject jsonObject = jsonDoc.object();
+        if(!jsonObject.isEmpty())
+            count = jsonObject.keys().size();
+    }
+
+
+    return count;
+}
+
 void FInitGame::download(const QUrl &url)
 {
     // Get filename wich is downloading
@@ -325,6 +351,13 @@ void FInitGame::download(const QUrl &url)
     connect(reply, &QNetworkReply::downloadProgress, this, &FInitGame::downloadProgress );
     connect(reply, &QNetworkReply::finished, this, &FInitGame::downloadFinished );
     connect(reply, &QNetworkReply::readyRead, this, &FInitGame::downloadReadyToRead );
+
+    if(downloadQueue.isEmpty()){
+        setSetup(false);
+        emit errorMessage(tr("Setup has been finished!"));
+    }else {
+        setSetup(true);
+    }
 
 }
 
@@ -392,14 +425,14 @@ bool FInitGame::generateFlagsForDownloading()
 
             foreach (QString key, jsonObject.keys()) {
 
-                //QString value = jsonObject.value(key).toString();
-                QString urlString = QString("https://flagcdn.com/%1.svg").arg(key);
-                QUrl url = QUrl(urlString);
-                downloadQueue.enqueue(url);
+                QString filename = QString("%1.svg").arg(key);
+                QFile file(filename);
 
-//                qDebug() << "Value: " << value;
-//                qDebug() << "Key: " << key;
-
+                if(!file.exists()){
+                    QString urlString = QString("https://flagcdn.com/%1.svg").arg(key);
+                    QUrl url = QUrl(urlString);
+                    downloadQueue.enqueue(url);
+                }
             }
 
 

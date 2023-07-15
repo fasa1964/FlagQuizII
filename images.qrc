@@ -4,5 +4,6 @@
         <file>png/ok.png</file>
         <file>png/close.png</file>
         <file>FErrorMessage.qml</file>
+        <file>FGameInit.qml</file>
     </qresource>
 </RCC>

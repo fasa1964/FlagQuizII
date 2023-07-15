@@ -95,6 +95,7 @@ private:
 
     void checkNetworkState();
     int getFlagsCount();
+    int getAvailableFlags();
 
     // Check files for game
     QMap<QString, QUrl> fileMap;
