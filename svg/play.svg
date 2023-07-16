@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256"
+   height="256"
+   viewBox="0 0 67.733332 67.733335"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="play.svg"
+   inkscape:export-filename="D:\QtProgramme\FlagQuizII\FlagQuizII\png\play.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="false"
+     units="px"
+     inkscape:zoom="2.5620932"
+     inkscape:cx="136.02159"
+     inkscape:cy="139.33919"
+     inkscape:window-width="2134"
+     inkscape:window-height="1030"
+     inkscape:window-x="2151"
+     inkscape:window-y="100"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect868"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect6662"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect6477"
+       is_visible="true"
+       lpeversion="1" />
+  </defs>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.258133px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 7.8550416,55.152301 C 7.8582082,49.015308 7.853927,42.878311 7.842198,36.741329 7.8253655,27.934044 7.7931939,19.126788 7.7456832,10.319615 L 61.447008,33.458073 Z"
+       id="path866"
+       inkscape:path-effect="#path-effect868"
+       inkscape:original-d="M 7.8550416,55.152301 C 7.8188724,55.059715 7.8419186,51.592499 7.842198,36.741329 7.8424782,21.890161 7.7459635,25.17126 7.7456832,10.319615 L 61.447008,33.458073 Z"
+       sodipodi:nodetypes="csccc" />
+  </g>
+</svg>

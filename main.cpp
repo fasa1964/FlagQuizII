@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 
 #include <finitgame.h>
+#include <fgame.h>
 
 int main(int argc, char *argv[])
 {
@@ -13,6 +14,7 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("qtexample@flagquizII.com");
 
     qmlRegisterType<FInitGame>("FInitGame", 1, 0, "Init");
+    qmlRegisterType<FGame>("FGame", 1, 0, "Game");
 
 
     QQmlApplicationEngine engine;

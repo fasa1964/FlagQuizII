@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="512"
+   height="256"
+   viewBox="0 0 135.46666 67.733335"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="borders.svg"
+   inkscape:export-filename="D:\QtProgramme\FlagQuizII\FlagQuizII\png\borders.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="true"
+     units="px"
+     inkscape:zoom="2"
+     inkscape:cx="287.75"
+     inkscape:cy="105.5"
+     inkscape:window-width="2134"
+     inkscape:window-height="1030"
+     inkscape:window-x="2133"
+     inkscape:window-y="90"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-grids="false"
+     inkscape:snap-page="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid8328"
+       empspacing="15" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect2832"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect8445"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect6662"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect6477"
+       is_visible="true"
+       lpeversion="1" />
+  </defs>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:none;stroke:#2f6c73;stroke-width:1.32292;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 90.894256,13.006335 c 5.500453,6.530227 10.509154,13.474562 14.969724,20.754823 1.453,2.371492 2.85576,4.795092 3.80253,7.410202 0.94677,2.615111 1.42347,5.450523 0.97559,8.195442 -0.5702,3.494556 -2.69067,6.706913 -5.67993,8.604647 L 31.011562,58.442313 35.762279,46.663596 19.07236,25.513617 27.516666,13.229167 64.293749,8.3343749 Z"
+       id="path2830"
+       inkscape:path-effect="#path-effect2832"
+       inkscape:original-d="m 90.894256,13.006335 c 4.990174,6.918539 9.980084,13.836814 14.969724,20.754823 4.98965,6.91801 3.18568,10.404028 4.77812,15.605644 1.59244,5.201618 -3.78636,5.736696 -5.67993,8.604647 L 31.011562,58.442313 35.762279,46.663596 19.07236,25.513617 27.516666,13.229167 64.293749,8.3343749 Z" />
+  </g>
+</svg>

@@ -5,5 +5,12 @@
         <file>png/close.png</file>
         <file>FErrorMessage.qml</file>
         <file>FGameInit.qml</file>
+        <file>png/quit.png</file>
+        <file>png/info.png</file>
+        <file>png/settings.png</file>
+        <file>png/update.png</file>
+        <file>png/play.png</file>
+        <file>FAppMenu.qml</file>
+        <file>png/borders.png</file>
     </qresource>
 </RCC>

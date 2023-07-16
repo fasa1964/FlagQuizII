@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="128"
+   height="256"
+   viewBox="0 0 33.866666 67.733335"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="info.svg"
+   inkscape:export-filename="D:\QtProgramme\FlagQuizII\FlagQuizII\png\info.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="false"
+     units="px"
+     inkscape:zoom="2.5620932"
+     inkscape:cx="189.8838"
+     inkscape:cy="145.58409"
+     inkscape:window-width="2134"
+     inkscape:window-height="1030"
+     inkscape:window-x="2151"
+     inkscape:window-y="100"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1.5875;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="path846"
+       sodipodi:type="arc"
+       sodipodi:cx="16.796225"
+       sodipodi:cy="12.559997"
+       sodipodi:rx="5.2070527"
+       sodipodi:ry="5.1840982"
+       sodipodi:start="1.6810592"
+       sodipodi:end="1.676667"
+       sodipodi:open="true"
+       sodipodi:arc-type="arc"
+       d="m 16.223243,17.712613 a 5.2070527,5.1840982 0 0 1 -4.603076,-5.717414 5.2070527,5.1840982 0 0 1 5.737672,-4.589059 5.2070527,5.1840982 0 0 1 4.615676,5.707336 5.2070527,5.1840982 0 0 1 -5.727535,4.601593"
+       inkscape:export-filename="D:\QtProgramme\FlagQuizII\FlagQuizII\png\path846.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1.5875;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect3335"
+       width="9.425396"
+       height="35.04406"
+       x="12.206455"
+       y="22.558945"
+       inkscape:export-filename="D:\QtProgramme\FlagQuizII\FlagQuizII\png\path846.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+</svg>

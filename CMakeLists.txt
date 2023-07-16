@@ -12,6 +12,7 @@ qt_standard_project_setup(REQUIRES 6.5)
 qt_add_executable(appFlagQuizII
     main.cpp
     finitgame.h finitgame.cpp
+    fgame.h fgame.cpp
 )
 
 qt_add_qml_module(appFlagQuizII
@@ -19,11 +20,16 @@ qt_add_qml_module(appFlagQuizII
     VERSION 2.0
     QML_FILES
     Main.qml
+    FAppMenu.qml
     FButton.qml
     FErrorMessage.qml
     FGameInit.qml
     images.qrc
 )
+
+if (ANDROID)
+    include(D:/Qt/Android/android_openssl/CMakeLists.txt)
+endif()
 
 set_target_properties(appFlagQuizII PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
