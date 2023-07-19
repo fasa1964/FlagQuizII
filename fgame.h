@@ -4,58 +4,149 @@
 #include <QObject>
 #include <QQmlEngine>
 
+#include <QMap>
+#include <QUrl>
+
 class FGame : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
 
-    Q_PROPERTY(bool flags READ flags WRITE setFlags NOTIFY flagsChanged)
-    Q_PROPERTY(bool borders READ borders WRITE setBorders NOTIFY bordersChanged)
-    Q_PROPERTY(bool areas READ areas WRITE setAreas NOTIFY areasChanged)
-    Q_PROPERTY(bool capitals READ capitals WRITE setCapitals NOTIFY capitalsChanged)
+    Q_PROPERTY(bool flagsAvailable READ flagsAvailable WRITE setFlagsAvailable NOTIFY flagsAvailableChanged)
+    Q_PROPERTY(bool bordersAvailable READ bordersAvailable WRITE setBordersAvailable NOTIFY bordersAvailableChanged)
+    Q_PROPERTY(bool areasAvailable READ areasAvailable WRITE setAreasAvailable NOTIFY areasAvailableChanged)
+    Q_PROPERTY(bool capitalsAvailable READ capitalsAvailable WRITE setCapitalsAvailable NOTIFY capitalsAvailableChanged)
+
+    Q_PROPERTY(QVariant question READ question WRITE setQuestion NOTIFY questionChanged)
+    Q_PROPERTY(QString answerA READ answerA WRITE setAnswerA NOTIFY answerAChanged)
+    Q_PROPERTY(QString answerB READ answerB WRITE setAnswerB NOTIFY answerBChanged)
+    Q_PROPERTY(QString answerC READ answerC WRITE setAnswerC NOTIFY answerCChanged)
+    Q_PROPERTY(QString answerD READ answerD WRITE setAnswerD NOTIFY answerDChanged)
+    Q_PROPERTY(QString solution READ solution WRITE setSolution NOTIFY solutionChanged)
+    Q_PROPERTY(QString flagPath READ flagPath WRITE setFlagPath NOTIFY flagPathChanged)
+    Q_PROPERTY(int questionCounter READ questionCounter WRITE setquestionCounter NOTIFY questionCounterChanged)
+
 
 public:
     explicit FGame(QObject *parent = nullptr);
 
     Q_INVOKABLE void startFlagsGame();
+    Q_INVOKABLE void startBordersGame();
+    Q_INVOKABLE void startCapitalsGame();
+    Q_INVOKABLE void startNextQuestion();
+    Q_INVOKABLE void cancelGame();
+
+    // Jokers
+    Q_INVOKABLE void setJoker50();
+    Q_INVOKABLE void setJokerPub();
+    Q_INVOKABLE void setJokerTel();
+
+    Q_INVOKABLE void setAnswer(const QString &answer);
 
 
-    bool flags() const;
-    void setFlags(bool newFlags);
 
-    bool borders() const;
-    void setBorders(bool newBorders);
 
-    bool areas() const;
-    void setAreas(bool newAreas);
 
-    bool capitals() const;
-    void setCapitals(bool newCapitals);
+
+    bool flagsAvailable() const;
+    void setFlagsAvailable(bool newFlagsAvailable);
+
+    bool bordersAvailable() const;
+    void setBordersAvailable(bool newBordersAvailable);
+
+    bool areasAvailable() const;
+    void setAreasAvailable(bool newAreasAvailable);
+
+    bool capitalsAvailable() const;
+    void setCapitalsAvailable(bool newCapitalsAvailable);
+
+    QVariant question() const;
+    void setQuestion(const QVariant &newQuestion);
+
+    QString flagPath() const;
+    void setFlagPath(const QString &newFlagPath);
+
+    QString solution() const;
+    void setSolution(const QString &newSolution);
+
+    QString answerA() const;
+    void setAnswerA(const QString &newAnswerA);
+
+    QString answerB() const;
+    void setAnswerB(const QString &newAnswerB);
+
+    QString answerC() const;
+    void setAnswerC(const QString &newAnswerC);
+
+    QString answerD() const;
+    void setAnswerD(const QString &newAnswerD);
+
+    int questionCounter() const;
+    void setquestionCounter(int newquestionCounter);
 
 signals:
 
     // QML Properties
-    void flagsChanged();
-    void bordersChanged();
-    void areasChanged();
-    void capitalsChanged();
+    void flagsAvailableChanged();
+    void bordersAvailableChanged();
+    void areasAvailableChanged();
+    void capitalsAvailableChanged();
 
+    void questionChanged();
+    void flagPathChanged();
+    void solutionChanged();
+    void answerAChanged();
+    void answerBChanged();
+    void answerCChanged();
+    void answerDChanged();
+    void questionCounterChanged();
+
+    void selectButton(const QString &button);
+    void errorMessage(const QString &errortext);
 
 private:
 
     // QML Properties
-    bool m_flags;
-    bool m_borders;
-    bool m_areas;
-    bool m_capitals;
+    bool m_flagsAvailable;
+    bool m_bordersAvailable;
+    bool m_areasAvailable;
+    bool m_capitalsAvailable;
 
+    // Type of game
+    bool gameflags;
+    bool gameborders;
+    bool gameareas;
+    bool gamecapitals;
 
-
-
+    // Question and Answers
+    QVariant m_question;
+    QString m_flagPath;
+    QString m_solution;
+    QString m_answerA;
+    QString m_answerB;
+    QString m_answerC;
+    QString m_answerD;
+    int m_questionCounter;
+    int maxQuestion;
+    int counter;
 
 
     int getFlagsCount();
 
+    QMap<QString, QString> countrieCodesMap;
+    QMap<QString, QString> generateCountrieCodesMap();
+
+    QMap<QString, QString> flagMap;
+    QMap<QString, QString> generateFlagMap();
+
+    // Get random question
+    void generateQuestion();
+    void generateAnswers();
+    QStringList questionList;
+    QStringList answerList;
+
+    QString getRandomCountrieCode(int max, QString &type);
+    int getRandomNumber(int max);
 
 };
 

@@ -11,84 +11,363 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
+#include <QRandomGenerator>
 
+#include <QDebug>
 
 FGame::FGame(QObject *parent)
     : QObject{parent}
 {
     if(getFlagsCount() > 0)
-        setFlags(true);
+        setFlagsAvailable(true);
     else
-        setFlags(false);
+        setFlagsAvailable(false);
 
 
     QFile file("data.json");
     if(file.exists()){
-        setBorders(true);
-        setAreas(true);
-        setCapitals(true);
+        setBordersAvailable(true);
+        setAreasAvailable(false);
+        setCapitalsAvailable(true);
     }else{
-        setBorders(false);
-        setAreas(false);
-        setCapitals(false);
+        setBordersAvailable(false);
+        setAreasAvailable(false);
+        setCapitalsAvailable(false);
     }
+
+    // Type of game
+    gameflags = false;
+    gameborders = false;
+    gameareas = false;
+    gamecapitals = false;
+
+    setQuestion("This is my question");
+    setAnswerA("Antwort A");
+    setAnswerB("Antwort B");
+    setAnswerC("Antwort C");
+    setAnswerD("Antwort D");
+    setSolution("Antwort C");
+    setFlagPath("");
+
+    counter = 0;
+    setquestionCounter(counter);
+    maxQuestion = 12;
 }
 
 void FGame::startFlagsGame()
 {
+    gameflags = true;
+    gameborders = false;
+    gameareas = false;
+    gamecapitals = false;
+
+    questionList.clear();
+
+    if(flagMap.isEmpty())
+        flagMap = generateFlagMap();
+
+    generateQuestion();
+}
+
+void FGame::startBordersGame()
+{
+    gameflags = false;
+    gameborders = true;
+    gameareas = false;
+    gamecapitals = false;
+}
+
+void FGame::startCapitalsGame()
+{
+    gameflags = false;
+    gameborders = false;
+    gameareas = false;
+    gamecapitals = true;
+}
+
+void FGame::startNextQuestion()
+{
+    generateQuestion();
+}
+
+void FGame::cancelGame()
+{
+    gameflags = false;
+    gameborders = false;
+    gameareas = false;
+    gamecapitals = false;
+
+    questionList.clear();
+    answerList.clear();
+
+    counter = 0;
+    setquestionCounter(counter);
 
 }
 
-bool FGame::flags() const
+void FGame::setJoker50()
 {
-    return m_flags;
+    QList<int> randomList;
+    int counter = 0;
+
+    while (counter < 2) {
+
+        int r = getRandomNumber(4);
+        while (randomList.contains(r)) {
+            r =  getRandomNumber(4);
+        }
+
+        if(r == 0 && m_answerA != m_solution){
+            setAnswerA("");
+            counter++;
+        }
+
+        if(r == 1 && m_answerB != m_solution){
+            setAnswerB("");
+            counter++;
+        }
+
+        if(r == 2 && m_answerC != m_solution){
+            setAnswerC("");
+            counter++;
+        }
+
+        if(r == 3 && m_answerD != m_solution){
+            setAnswerD("");
+            counter++;
+        }
+
+        randomList << r;
+    }
 }
 
-void FGame::setFlags(bool newFlags)
+void FGame::setJokerPub()
 {
-    if (m_flags == newFlags)
+    if(m_answerA == m_solution)
+        emit selectButton("A");
+
+    if(m_answerB == m_solution)
+        emit selectButton("B");
+
+    if(m_answerC == m_solution)
+        emit selectButton("C");
+
+    if(m_answerD == m_solution)
+        emit selectButton("D");
+}
+
+void FGame::setJokerTel()
+{
+    if(m_questionCounter <= 6){
+
+        if(m_answerA == m_solution)
+            emit selectButton("A");
+
+        if(m_answerB == m_solution)
+            emit selectButton("B");
+
+        if(m_answerC == m_solution)
+            emit selectButton("C");
+
+        if(m_answerD == m_solution)
+            emit selectButton("D");
+    }
+
+    if(m_questionCounter > 6){
+
+        int r = getRandomNumber(2);
+
+        if(r == 0){
+            if(m_answerA == m_solution)
+                emit selectButton("A");
+
+            if(m_answerB == m_solution)
+                emit selectButton("B");
+
+            if(m_answerC == m_solution)
+                emit selectButton("C");
+
+            if(m_answerD == m_solution)
+                emit selectButton("D");
+        }
+
+        if(r == 1){
+
+            int v = getRandomNumber(4);
+            if(v == 0)
+                emit selectButton("A");
+
+            if(v == 1)
+                emit selectButton("B");
+
+            if(v == 2)
+                emit selectButton("C");
+
+            if(v == 3)
+                emit selectButton("D");
+        }
+    }
+}
+
+void FGame::setAnswer(const QString &answer)
+{
+    qDebug() << "Answer: " << answer;
+}
+
+bool FGame::flagsAvailable() const
+{
+    return m_flagsAvailable;
+}
+
+void FGame::setFlagsAvailable(bool newFlagsAvailable)
+{
+    if (m_flagsAvailable == newFlagsAvailable)
         return;
-    m_flags = newFlags;
-    emit flagsChanged();
+    m_flagsAvailable = newFlagsAvailable;
+    emit flagsAvailableChanged();
 }
 
-bool FGame::borders() const
+bool FGame::bordersAvailable() const
 {
-    return m_borders;
+    return m_bordersAvailable;
 }
 
-void FGame::setBorders(bool newBorders)
+void FGame::setBordersAvailable(bool newBordersAvailable)
 {
-    if (m_borders == newBorders)
+    if (m_bordersAvailable == newBordersAvailable)
         return;
-    m_borders = newBorders;
-    emit bordersChanged();
+    m_bordersAvailable = newBordersAvailable;
+    emit bordersAvailableChanged();
 }
 
-bool FGame::areas() const
+bool FGame::areasAvailable() const
 {
-    return m_areas;
+    return m_areasAvailable;
 }
 
-void FGame::setAreas(bool newAreas)
+void FGame::setAreasAvailable(bool newAreasAvailable)
 {
-    if (m_areas == newAreas)
+    if (m_areasAvailable == newAreasAvailable)
         return;
-    m_areas = newAreas;
-    emit areasChanged();
+    m_areasAvailable = newAreasAvailable;
+    emit areasAvailableChanged();
 }
 
-bool FGame::capitals() const
+bool FGame::capitalsAvailable() const
 {
-    return m_capitals;
+    return m_capitalsAvailable;
 }
 
-void FGame::setCapitals(bool newCapitals)
+void FGame::setCapitalsAvailable(bool newCapitalsAvailable)
 {
-    if (m_capitals == newCapitals)
+    if (m_capitalsAvailable == newCapitalsAvailable)
         return;
-    m_capitals = newCapitals;
-    emit capitalsChanged();
+    m_capitalsAvailable = newCapitalsAvailable;
+    emit capitalsAvailableChanged();
+}
+
+QVariant FGame::question() const
+{
+    return m_question;
+}
+
+void FGame::setQuestion(const QVariant &newQuestion)
+{
+    if (m_question == newQuestion)
+        return;
+    m_question = newQuestion;
+    emit questionChanged();
+}
+
+QString FGame::flagPath() const
+{
+    return m_flagPath;
+}
+
+void FGame::setFlagPath(const QString &newFlagPath)
+{
+    if (m_flagPath == newFlagPath)
+        return;
+    m_flagPath = newFlagPath;
+    emit flagPathChanged();
+}
+
+QString FGame::solution() const
+{
+    return m_solution;
+}
+
+void FGame::setSolution(const QString &newSolution)
+{
+    if (m_solution == newSolution)
+        return;
+    m_solution = newSolution;
+    emit solutionChanged();
+}
+
+QString FGame::answerA() const
+{
+    return m_answerA;
+}
+
+void FGame::setAnswerA(const QString &newAnswerA)
+{
+    if (m_answerA == newAnswerA)
+        return;
+    m_answerA = newAnswerA;
+    emit answerAChanged();
+}
+
+QString FGame::answerB() const
+{
+    return m_answerB;
+}
+
+void FGame::setAnswerB(const QString &newAnswerB)
+{
+    if (m_answerB == newAnswerB)
+        return;
+    m_answerB = newAnswerB;
+    emit answerBChanged();
+}
+
+QString FGame::answerC() const
+{
+    return m_answerC;
+}
+
+void FGame::setAnswerC(const QString &newAnswerC)
+{
+    if (m_answerC == newAnswerC)
+        return;
+    m_answerC = newAnswerC;
+    emit answerCChanged();
+}
+
+QString FGame::answerD() const
+{
+    return m_answerD;
+}
+
+void FGame::setAnswerD(const QString &newAnswerD)
+{
+    if (m_answerD == newAnswerD)
+        return;
+    m_answerD = newAnswerD;
+    emit answerDChanged();
+}
+
+int FGame::questionCounter() const
+{
+    return m_questionCounter;
+}
+
+void FGame::setquestionCounter(int newquestionCounter)
+{
+    if (m_questionCounter == newquestionCounter)
+        return;
+    m_questionCounter = newquestionCounter;
+    emit questionCounterChanged();
 }
 
 int FGame::getFlagsCount()
@@ -96,4 +375,183 @@ int FGame::getFlagsCount()
     QDir dir;
     QStringList list = dir.entryList( QStringList() << "*.svg", QDir::Files);
     return list.count();
+}
+
+QMap<QString, QString> FGame::generateCountrieCodesMap()
+{
+    QMap<QString, QString>map;
+
+    QFile file("codes.json");
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString f = file.fileName();
+        QString e = file.errorString();
+        QString text = QString("Could not open %1 for reading: %2").arg(f, f.size() ).arg(e, e.size());
+        emit errorMessage(text);
+        return map;
+    }
+
+
+    QTextStream file_text(&file);
+    QString jsonString = file_text.readAll();
+
+    file.close();
+
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonString.toUtf8());
+
+    if(jsonDoc.isNull())
+        return map;
+
+    if(jsonDoc.isArray())
+        return map;
+
+    if(jsonDoc.isObject()){
+        QJsonObject jsonObject = jsonDoc.object();
+
+        if(!jsonObject.isEmpty()){
+
+            foreach (QString code, jsonObject.keys()) {
+
+                QString country = jsonObject.value(code).toString();
+                map.insert(code, country);
+            }
+        }
+    }
+
+    return map;
+}
+
+QMap<QString, QString> FGame::generateFlagMap()
+{
+    QMap<QString, QString>map;
+
+    if(countrieCodesMap.isEmpty())
+        countrieCodesMap = generateCountrieCodesMap();
+
+    QMapIterator<QString, QString> it(countrieCodesMap);
+    while (it.hasNext()) {
+        it.next();
+
+
+        QString key = it.key();
+        QString filepath = QDir::currentPath() + "/" + key +".svg"; // File of flag
+
+        QFile file(filepath);
+        if(file.exists())
+            map.insert(key, filepath);
+    }
+
+    return map;
+}
+
+void FGame::generateQuestion()
+{
+    if(counter >= maxQuestion)
+        return;
+
+    counter++;
+    setquestionCounter( counter );
+
+
+
+    QString type = "question";
+    if(gameflags){
+
+        QString key = getRandomCountrieCode(flagMap.count()-1, type);
+        QString path = flagMap.value(key);
+        setFlagPath(path);
+
+        QString countrie = countrieCodesMap.value(key);
+        setSolution(countrie);
+    }
+
+    generateAnswers();
+}
+
+void FGame::generateAnswers()
+{
+    QString type = "answer";
+    answerList.clear();
+
+    QMap<int, QString> posList;
+    setAnswerA("");
+    setAnswerB("");
+    setAnswerC("");
+    setAnswerD("");
+
+    if(gameflags){
+
+        QString solutionKey = countrieCodesMap.key(solution());
+        answerList << solutionKey;
+
+        for(int i = 0; i < 3; i++){
+            QString key = getRandomCountrieCode(flagMap.size()-1, type);
+            QString country = countrieCodesMap.value(key);
+
+
+            int pos = getRandomNumber(4);
+            while (posList.contains(pos)) {
+                pos = getRandomNumber(4);
+            }
+            posList.insert(pos, country);
+
+            if(pos == 0)
+                setAnswerA(country);
+
+            if(pos == 1)
+                setAnswerB(country);
+
+            if(pos == 2)
+                setAnswerC(country);
+
+            if(pos == 3)
+                setAnswerD(country);
+
+        }
+
+        if(posList.value(0).isEmpty())
+            setAnswerA(solution());
+        if(posList.value(1).isEmpty())
+            setAnswerB(solution());
+        if(posList.value(2).isEmpty())
+            setAnswerC(solution());
+        if(posList.value(3).isEmpty())
+            setAnswerD(solution());
+
+    }
+}
+
+QString FGame::getRandomCountrieCode(int max, QString &type)
+{
+    QString key;
+
+    int nr = getRandomNumber(max);
+    key = countrieCodesMap.keys().at(nr);
+
+    if(type == "question"){
+        while (questionList.contains(key)) {
+            nr = getRandomNumber(max);
+            key = countrieCodesMap.keys().at(nr);
+        }
+
+        questionList << key;
+    }
+
+    if(type == "answer"){
+        while (answerList.contains(key)) {
+            nr = getRandomNumber(max);
+            key = countrieCodesMap.keys().at(nr);
+        }
+
+        answerList << key;
+    }
+
+
+    return key;
+}
+
+int FGame::getRandomNumber(int max)
+{
+    quint32 v = QRandomGenerator::system()->bounded(max);
+    return v;
 }

@@ -7,10 +7,12 @@ Rectangle{
     height: 150
     y: root.height/2 - control.height/2
     x: root.width
-    color: "#263238"
+    color: "transparent" //"#263238"
     border.color: "white"
     border.width: 0.5
     z:2
+
+    MouseArea{ anchors.fill: parent  }
 
     property string errortext: "My errortext"
 
@@ -49,7 +51,7 @@ Rectangle{
         id: errorrect
         anchors.fill: parent
         color: "white"
-        opacity: 0.1
+        opacity: 0.5
 
     }
 

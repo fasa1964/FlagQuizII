@@ -12,5 +12,9 @@
         <file>png/play.png</file>
         <file>FAppMenu.qml</file>
         <file>png/borders.png</file>
+        <file>png/Joker50.png</file>
+        <file>png/JokerPub.png</file>
+        <file>png/JokerTel.png</file>
+        <file>png/star.png</file>
     </qresource>
 </RCC>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256"
+   height="256"
+   viewBox="0 0 67.73333 67.733335"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="star.svg"
+   inkscape:export-filename="D:\QtProgramme\FFlagsQuiz\FlagsQuiz\png\seetings.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="true"
+     units="px"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="281.78204"
+     inkscape:cy="152.73506"
+     inkscape:window-width="2134"
+     inkscape:window-height="1030"
+     inkscape:window-x="2133"
+     inkscape:window-y="90"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-grids="false"
+     inkscape:snap-page="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid8328"
+       empspacing="15" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect8445"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect6662"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect6477"
+       is_visible="true"
+       lpeversion="1" />
+  </defs>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       sodipodi:type="star"
+       style="fill:#ffe222;fill-opacity:1;stroke:#f7f500;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="path857"
+       inkscape:flatsided="false"
+       sodipodi:sides="5"
+       sodipodi:cx="79.903061"
+       sodipodi:cy="45.961941"
+       sodipodi:r1="112.97123"
+       sodipodi:r2="56.485615"
+       sodipodi:arg1="0.9949459"
+       sodipodi:arg2="1.6232644"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="M 141.42135,140.71424 76.940729,102.36982 8.7984612,133.74938 25.340565,60.57559 -25.560286,5.4652587 49.143916,-1.4142101 85.827728,-66.853825 115.45536,2.0682197 189.02805,16.734645 132.63473,66.21028 Z"
+       transform="matrix(0.26458333,0,0,0.26458333,11.786586,23.011905)"
+       inkscape:export-filename="D:\QtProgramme\FlagQuizII\FlagQuizII\png\star.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+</svg>
