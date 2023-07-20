@@ -142,6 +142,9 @@ private:
     QMap<QString, QString> flagMap;
     QMap<QString, QString> generateFlagMap();
 
+    QMap<QString, QString> capitalMap;
+    QMap<QString, QString> generateCapitalMap();
+
     // Get random question
     void generateQuestion();
     void generateAnswers();
@@ -150,6 +153,10 @@ private:
 
     QString getRandomCountrieCode(int max, QString &type);
     int getRandomNumber(int max);
+
+    // Get data from
+    QVariant readData(const QString &alpha2, const QString &key);
+
 
 };
 

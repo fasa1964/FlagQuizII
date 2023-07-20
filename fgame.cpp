@@ -102,6 +102,11 @@ void FGame::startCapitalsGame()
     gameborders = false;
     gameareas = false;
     gamecapitals = true;
+
+    questionList.clear();
+
+    if(capitalMap.isEmpty())
+        capitalMap = generateCapitalMap();
 }
 
 void FGame::startNextQuestion()
@@ -230,8 +235,6 @@ void FGame::setJokerTel()
 
 void FGame::setAnswer(const QString &answer)
 {
-    //qDebug() << "Answer: " << answer;
-
 
     if(answer == solution()){
         gamePoints++;
@@ -458,14 +461,44 @@ QMap<QString, QString> FGame::generateFlagMap()
     while (it.hasNext()) {
         it.next();
 
-
         QString key = it.key();
-        QString filepath = QDir::currentPath() + "/" + key +".svg"; // File of flag
 
-        QFile file(filepath);
-        if(file.exists())
-            map.insert(key, filepath);
+        if(key.size() <= 2){
+
+            QString filepath = QDir::currentPath() + "/" + key +".svg"; // File of flag
+
+            QFile file(filepath);
+            if(file.exists())
+                map.insert(key, filepath);
+            }
     }
+
+    return map;
+}
+
+QMap<QString, QString> FGame::generateCapitalMap()
+{
+    QMap<QString, QString>map;
+
+    if(countrieCodesMap.isEmpty())
+            countrieCodesMap = generateCountrieCodesMap();
+
+
+    QMapIterator<QString, QString> it(countrieCodesMap);
+    while (it.hasNext()) {
+            it.next();
+
+            QString alpha2 = it.key();
+            QVariant capital = readData(alpha2, "capital");
+            //qDebug() << "Code: " << alpha2 << ":" << capital;
+            if(capital.isValid()){
+
+
+
+            }
+    }
+
+
 
     return map;
 }
@@ -582,4 +615,53 @@ int FGame::getRandomNumber(int max)
 {
     quint32 v = QRandomGenerator::system()->bounded(max);
     return v;
+}
+
+QVariant FGame::readData(const QString &alpha2, const QString &key)
+{
+    QVariant result;
+
+    QFile file("data.json");
+
+    if (!file.open(QIODevice::ReadOnly)) {
+        QString f = file.fileName();
+        QString e = file.errorString();
+        QString text = QString("Could not open %1 for reading: %2").arg(f, f.size() ).arg(e, e.size());
+        emit errorMessage(text);
+        return result;
+    }
+
+    QTextStream file_text(&file);
+    QString jsonString = file_text.readAll();
+
+    file.close();
+
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonString.toUtf8());
+
+    if(jsonDoc.isNull())
+        return result;
+
+    if(jsonDoc.isArray()){
+
+        QJsonArray jsonArray = jsonDoc.array();
+
+        for(int i = 0; i < jsonArray.size(); i++){
+
+            QJsonObject obj = jsonArray.at(i).toObject();
+
+            if(!obj.isEmpty()){
+
+                QString code =  obj.value("iso").toObject().value("alpha_2").toString();
+
+                if(code == alpha2){
+
+                    result = obj.value(key).toVariant();
+                    break;
+                }
+
+            }
+        }
+    }
+
+    return result;
 }
