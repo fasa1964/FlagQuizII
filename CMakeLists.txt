@@ -22,6 +22,7 @@ qt_add_qml_module(appFlagQuizII
     Main.qml
     FAppMenu.qml
     FButton.qml
+    FPoints.qml
     FErrorMessage.qml
     FGameInit.qml
     images.qrc

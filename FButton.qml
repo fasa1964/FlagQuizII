@@ -10,6 +10,7 @@ Rectangle {
     border.color: bordercolor
 
     signal buttonclicked()
+    signal finishedTimer()
 
     function startAnim(){
         animborder.start()
@@ -22,7 +23,6 @@ Rectangle {
         animtext.start()
         particletimer.start()
         starsparticle.start()
-
     }
 
 
@@ -35,8 +35,10 @@ Rectangle {
             sec += 100
             if(sec >= maxsec){
                 particletimer.stop()
+                finishedTimer()
             }
         }
+
     }
 
 
@@ -58,7 +60,7 @@ Rectangle {
     property int msec: 100
 
     property int life: 500      // LifeSpan for stars
-    property int maxsec: 1000  // LifeSpan for stars
+    property int maxsec: 1000    // LifeSpan for stars
     property int sec: 0
 
     Text {
@@ -110,13 +112,14 @@ Rectangle {
         running: false
     }
 
+    // Animate text
     SequentialAnimation{
         id: animtext
         running: false
-        PropertyAnimation{ target: control; property: "fontsize"; to: 20; duration: 200 }
-        PropertyAnimation{ target: control; property: "textcolor"; to: "green"; duration: 200 }
-        PropertyAnimation{ target: control; property: "fontsize"; to: control.fontsize; duration: 300 }
-        PropertyAnimation{ target: control; property: "textcolor"; to: control.textcolor; duration: 300 }
+        PropertyAnimation{ target: control; property: "fontsize"; to: 20; duration: 50 }
+        PropertyAnimation{ target: control; property: "textcolor"; to: "green"; duration: 50 }
+        PropertyAnimation{ target: control; property: "fontsize"; to: control.fontsize; duration: 100 }
+        PropertyAnimation{ target: control; property: "textcolor"; to: control.textcolor; duration: 100 }
     }
 
 
@@ -137,6 +140,7 @@ Rectangle {
         PropertyAnimation{ target: control; property: "bordercolor"; to: control.bordercolor; duration: msec }
         PropertyAnimation{ target: control; property: "textcolor"; to: control.textcolor; duration: msec }
         PropertyAnimation{ target: control; property: "buttoncolor"; to: control.buttoncolor; duration: msec }
+
     }
 
 

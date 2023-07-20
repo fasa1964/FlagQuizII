@@ -44,10 +44,6 @@ public:
     Q_INVOKABLE void setAnswer(const QString &answer);
 
 
-
-
-
-
     bool flagsAvailable() const;
     void setFlagsAvailable(bool newFlagsAvailable);
 
@@ -103,6 +99,9 @@ signals:
 
     void selectButton(const QString &button);
     void errorMessage(const QString &errortext);
+    void credits(const QString &euro);
+    void gameOver(const QString &euro);
+
 
 private:
 
@@ -129,6 +128,10 @@ private:
     int m_questionCounter;
     int maxQuestion;
     int counter;
+
+    // Points
+    QMap<int, QString> pointMap;
+    int gamePoints;
 
 
     int getFlagsCount();

@@ -52,6 +52,25 @@ FGame::FGame(QObject *parent)
     counter = 0;
     setquestionCounter(counter);
     maxQuestion = 12;
+    gamePoints = 0;
+
+    // Setup points
+    pointMap.insert(1, "50€");
+    pointMap.insert(2, "100€");
+    pointMap.insert(3, "200€");
+    pointMap.insert(4, "500€");
+    pointMap.insert(5, "1.000€");
+    pointMap.insert(6, "2.000€");
+    pointMap.insert(7, "4.000€");
+    pointMap.insert(8, "8.000€");
+    pointMap.insert(9, "16.000€");
+    pointMap.insert(10, "32.000€");
+    pointMap.insert(11, "64.000€");
+    pointMap.insert(12, "128.000€");
+    pointMap.insert(13, "256.000€");
+    pointMap.insert(14, "500.000€");
+    pointMap.insert(15, "1.000.000€");
+
 }
 
 void FGame::startFlagsGame()
@@ -211,7 +230,14 @@ void FGame::setJokerTel()
 
 void FGame::setAnswer(const QString &answer)
 {
-    qDebug() << "Answer: " << answer;
+    //qDebug() << "Answer: " << answer;
+
+
+    if(answer == solution()){
+        gamePoints++;
+        emit credits( pointMap.value(gamePoints) );
+    }
+
 }
 
 bool FGame::flagsAvailable() const
@@ -446,8 +472,10 @@ QMap<QString, QString> FGame::generateFlagMap()
 
 void FGame::generateQuestion()
 {
-    if(counter >= maxQuestion)
+    if(counter >= maxQuestion){
+        emit gameOver( pointMap.value(gamePoints));
         return;
+    }
 
     counter++;
     setquestionCounter( counter );

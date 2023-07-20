@@ -20,6 +20,34 @@ Window {
         gamemenu.visible = true
     }
 
+    function gameIsOver(text){
+        // Do something when game is over
+        //console.log("Game over:" + text)
+    }
+
+
+    function createPointObject(text){
+            var component = Qt.createComponent("FPoints.qml");
+                if (component.status === Component.Ready)
+                {
+                    var point = component.createObject(gamefield, {x: 40, y: 0});
+                    if(point === null){
+                        showMessage("Error", "Creating object's failed!", 0, true)
+                    }else{
+                        point.money = text
+                        var xpos = pointsModel.count * 15
+                        point.x = gamefield.x + 10 + xpos
+
+                        pointsModel.append({"obj":point})
+                    }
+                }
+                else
+                {
+                    showMessage("Error", "Creating object's failed!", 0, true)
+                }
+    }
+    ListModel{ id: pointsModel }
+
     // C++ Classes
     Init{ id: init
 
@@ -45,8 +73,9 @@ Window {
                                 buttonC.startAnim();
                             if(button === "D")
                                 buttonD.startAnim();
-
                         }
+        onCredits: (euro) => { createPointObject(euro) }
+        onGameOver: (euro) => { gameIsOver(euro) }
     }
 
 
@@ -177,7 +206,7 @@ Window {
                 imageurl: "qrc:/png/Joker50.png"
                 imagevisible: true
                 textvisible: false
-                onButtonclicked: { game.setJoker50(); /*joker50Button.disable = true*/ }
+                onButtonclicked: { game.setJoker50(); joker50Button.disable = true }
             }
             FButton{
                 id: jokerTelButton
@@ -187,7 +216,7 @@ Window {
                 imageurl: "qrc:/png/JokerTel.png"
                 imagevisible: true
                 textvisible: false
-                onButtonclicked: { game.setJokerTel();/* jokerTelButton.disable = true*/ }
+                onButtonclicked: { game.setJokerTel(); jokerTelButton.disable = true }
             }
             FButton{
                 id: jokerPubButton
@@ -197,7 +226,7 @@ Window {
                 imageurl: "qrc:/png/JokerPub.png"
                 imagevisible: true
                 textvisible: false
-                onButtonclicked: { game.setJokerPub(); /*jokerPubButton.disable = true*/ }
+                onButtonclicked: { game.setJokerPub(); jokerPubButton.disable = true }
             }
         }
 
@@ -235,9 +264,15 @@ Window {
             anchors.left: questionrect.left
             onButtonclicked: {
 
-                if( buttonA.buttontext === game.solution ){ buttonA.startStars() }
-                game.startNextQuestion()
+                if(game.solution === buttonA.buttontext)
+                    buttonA.startStars()
+                else
+                    game.startNextQuestion()
+
+                game.setAnswer(buttonA.buttontext)
+
             }
+            onFinishedTimer: {  game.startNextQuestion()  }
 
         }
         FButton{
@@ -250,9 +285,15 @@ Window {
             anchors.top: buttonA.top
             onButtonclicked: {
 
-                if( buttonB.buttontext === game.solution ){ buttonB.startStars() }
-                game.startNextQuestion()
+                if(game.solution === buttonB.buttontext)
+                    buttonB.startStars()
+                else
+                    game.startNextQuestion()
+
+                game.setAnswer(buttonB.buttontext)
+
             }
+            onFinishedTimer: {  game.startNextQuestion()  }
 
         }
         FButton{
@@ -266,9 +307,15 @@ Window {
             anchors.topMargin: 10
             onButtonclicked: {
 
-                if( buttonC.buttontext === game.solution ){ buttonC.startStars() }
-                game.startNextQuestion()
+                if(game.solution === buttonC.buttontext)
+                    buttonC.startStars()
+                else
+                    game.startNextQuestion()
+
+                game.setAnswer(buttonC.buttontext)
+
             }
+            onFinishedTimer: {  game.startNextQuestion()  }
 
         }
         FButton{
@@ -282,9 +329,15 @@ Window {
             anchors.topMargin: 10
             onButtonclicked: {
 
-                if( buttonD.buttontext === game.solution ){ buttonD.startStars() }
-                game.startNextQuestion()
+                if(game.solution === buttonD.buttontext)
+                    buttonD.startStars()
+                else
+                    game.startNextQuestion()
+
+                game.setAnswer(buttonD.buttontext)
+                //game.startNextQuestion()
             }
+            onFinishedTimer: { game.startNextQuestion()  }
         }
     }
 
