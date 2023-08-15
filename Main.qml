@@ -14,10 +14,22 @@ Window {
     color: "#263238"
 
     property bool android: false
+    property var pointsArray: []
 
     function showGameMenu(){
         gamefield.visible = false
         gamemenu.visible = true
+
+        removePoints()
+    }
+
+    function removePoints(){
+
+        for(var i = 0; i < pointsArray.length; i++)
+            pointsArray[i].remove()
+
+        pointsModel.clear()
+        game.cancelGame()
     }
 
     function gameIsOver(text){
@@ -39,6 +51,7 @@ Window {
                         point.x = gamefield.x + 10 + xpos
 
                         pointsModel.append({"obj":point})
+                        pointsArray.push(point)
                     }
                 }
                 else

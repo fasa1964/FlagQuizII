@@ -51,7 +51,7 @@ FGame::FGame(QObject *parent)
 
     counter = 0;
     setquestionCounter(counter);
-    maxQuestion = 12;
+    maxQuestion = 15;
     gamePoints = 0;
 
     // Setup points
@@ -79,6 +79,7 @@ void FGame::startFlagsGame()
     gameborders = false;
     gameareas = false;
     gamecapitals = false;
+    gamePoints = 0;
 
     questionList.clear();
 
@@ -120,6 +121,7 @@ void FGame::cancelGame()
     gameborders = false;
     gameareas = false;
     gamecapitals = false;
+    gamePoints = 0;
 
     questionList.clear();
     answerList.clear();

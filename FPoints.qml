@@ -13,6 +13,7 @@ Rectangle{
 
     property string money: ""
 
+    function remove(){ pointrect.destroy() }
 
     Behavior on x { SpringAnimation { spring: 2; damping: 0.2 } }
     Behavior on y { SpringAnimation { spring: 25; damping: 0.3; mass: 1.5 } }
