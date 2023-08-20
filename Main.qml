@@ -16,11 +16,23 @@ Window {
     property bool android: false
     property var pointsArray: []
 
+    // For timerrectangle
+    property int delay: 20
+    property int wfill: 0
+    property int msecond: 0
+    property int second: 0
+
+
+
     function showGameMenu(){
         gamefield.visible = false
         gamemenu.visible = true
 
         removePoints()
+
+        joker50Button.disable = false
+        jokerPubButton.disable = false
+        jokerTelButton.disable = false
     }
 
     function removePoints(){
@@ -34,9 +46,17 @@ Window {
 
     function gameIsOver(text){
         // Do something when game is over
-        //console.log("Game over:" + text)
+        questiontimer.stop()
+
     }
 
+    function nextQuestion(){
+        msecond = 0
+        second = 0
+        wfill = 0
+        questiontimer.start()
+        game.startNextQuestion()
+    }
 
     function createPointObject(text){
             var component = Qt.createComponent("FPoints.qml");
@@ -60,6 +80,30 @@ Window {
                 }
     }
     ListModel{ id: pointsModel }
+
+    // Timer for question
+    Timer{
+        id: questiontimer
+        repeat: true
+        interval: 100
+        onTriggered: { timeout() }
+    }
+
+    function timeout(){
+
+        msecond += 100
+        wfill += 10
+
+        if(msecond >= 1000){ // one second
+
+            msecond = 0
+            second++
+        }
+
+        if(second >= delay)
+            nextQuestion()
+    }
+
 
     // C++ Classes
     Init{ id: init
@@ -138,7 +182,7 @@ Window {
             height: parent.height/2 - 15
             x:5; y:5
             disable: game.flagsAvailable ? false : true
-            onButtonclicked: { game.startFlagsGame(); gamemenu.visible = false; gamefield.visible = true }
+            onButtonclicked: { game.startFlagsGame(); nextQuestion() ; gamemenu.visible = false; gamefield.visible = true }
         }
         FButton{
             id: capitalsbutton
@@ -149,7 +193,7 @@ Window {
             anchors.leftMargin: 5
             anchors.top: flagsbutton.top
             disable: game.capitalsAvailable ? false : true
-            onButtonclicked: game.startCapitalsGame()
+            onButtonclicked: { game.startCapitalsGame(); nextQuestion() ; gamemenu.visible = false; gamefield.visible = true}
         }
         FButton{
             id: bordersbutton
@@ -160,7 +204,7 @@ Window {
             anchors.top: flagsbutton.bottom
             anchors.topMargin: 5
             disable: game.bordersAvailable ? false : true
-            onButtonclicked: game.startBordersGame()
+            onButtonclicked: { game.startBordersGame(); nextQuestion() ; gamemenu.visible = false; gamefield.visible = true}
         }
         FButton{
             id: areasbutton
@@ -171,6 +215,7 @@ Window {
             anchors.top: flagsbutton.bottom
             anchors.topMargin: 5
             disable: game.areasAvailable ? false : true
+            onButtonclicked: { game.startAreasGame(); nextQuestion() ; gamemenu.visible = false; gamefield.visible = true}
         }
     }
 
@@ -261,7 +306,17 @@ Window {
                     fillMode: Image.PreserveAspectFit
                     anchors.fill: parent
                     source: "file:/" + game.flagPath
+                    opacity: game.flags ? 1.0 : 0.2
                 }
+            }
+
+            Text {
+                id: question
+                text: game.question
+                anchors.centerIn: parent
+                color: "#0040FF"
+                font.pointSize: android ? 12 : 15
+                visible: game.flags ? false : true
             }
         }
 
@@ -280,12 +335,13 @@ Window {
                 if(game.solution === buttonA.buttontext)
                     buttonA.startStars()
                 else
-                    game.startNextQuestion()
+                    nextQuestion() // game.startNextQuestion()
 
                 game.setAnswer(buttonA.buttontext)
 
+
             }
-            onFinishedTimer: {  game.startNextQuestion()  }
+            onFinishedTimer: { nextQuestion() /*game.startNextQuestion()*/  }
 
         }
         FButton{
@@ -301,12 +357,12 @@ Window {
                 if(game.solution === buttonB.buttontext)
                     buttonB.startStars()
                 else
-                    game.startNextQuestion()
+                    nextQuestion()
 
                 game.setAnswer(buttonB.buttontext)
 
             }
-            onFinishedTimer: {  game.startNextQuestion()  }
+            onFinishedTimer: { nextQuestion() }
 
         }
         FButton{
@@ -323,12 +379,12 @@ Window {
                 if(game.solution === buttonC.buttontext)
                     buttonC.startStars()
                 else
-                    game.startNextQuestion()
+                    nextQuestion()
 
                 game.setAnswer(buttonC.buttontext)
 
             }
-            onFinishedTimer: {  game.startNextQuestion()  }
+            onFinishedTimer: {  nextQuestion()  }
 
         }
         FButton{
@@ -345,13 +401,41 @@ Window {
                 if(game.solution === buttonD.buttontext)
                     buttonD.startStars()
                 else
-                    game.startNextQuestion()
+                    nextQuestion()
 
                 game.setAnswer(buttonD.buttontext)
-                //game.startNextQuestion()
+
             }
-            onFinishedTimer: { game.startNextQuestion()  }
+            onFinishedTimer: { nextQuestion()  }
         }
+
+
+        Rectangle{
+            id: timerrectangle
+            width: buttonA.width * 2 + 10
+            height: 30
+            color: "transparent"
+            border.color: "white"
+            border.width: 0.5
+            anchors.left: buttonC.left
+            anchors.top: buttonC.bottom
+            anchors.topMargin: 5
+
+
+            Rectangle{
+                id: fillrect
+                height: timerrectangle.height - 2
+                width:  timerrectangle.width/(delay*100) * wfill - 2
+                color: "steelblue"
+                y:1; x:1
+            }
+
+            Text{ text: second; anchors.centerIn: parent; color: "white" }
+
+        }
+
+
+
     }
 
     ParticleSystem {

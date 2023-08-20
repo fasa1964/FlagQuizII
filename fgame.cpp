@@ -27,7 +27,7 @@ FGame::FGame(QObject *parent)
     QFile file("data.json");
     if(file.exists()){
         setBordersAvailable(true);
-        setAreasAvailable(false);
+        setAreasAvailable(true);
         setCapitalsAvailable(true);
     }else{
         setBordersAvailable(false);
@@ -40,6 +40,8 @@ FGame::FGame(QObject *parent)
     gameborders = false;
     gameareas = false;
     gamecapitals = false;
+    setFlags(false);
+
 
     setQuestion("This is my question");
     setAnswerA("Antwort A");
@@ -50,7 +52,7 @@ FGame::FGame(QObject *parent)
     setFlagPath("");
 
     counter = 0;
-    setquestionCounter(counter);
+    setQuestionCounter(counter);
     maxQuestion = 15;
     gamePoints = 0;
 
@@ -80,13 +82,14 @@ void FGame::startFlagsGame()
     gameareas = false;
     gamecapitals = false;
     gamePoints = 0;
+    setFlags(gameflags);
 
     questionList.clear();
 
     if(flagMap.isEmpty())
         flagMap = generateFlagMap();
 
-    generateQuestion();
+    //generateQuestion();
 }
 
 void FGame::startBordersGame()
@@ -95,6 +98,16 @@ void FGame::startBordersGame()
     gameborders = true;
     gameareas = false;
     gamecapitals = false;
+    setFlags(gameflags);
+
+    questionList.clear();
+
+    if(flagMap.isEmpty())
+        flagMap = generateFlagMap();
+
+    if(borderMap.isEmpty())
+        borderMap = generateBorderMap();
+
 }
 
 void FGame::startCapitalsGame()
@@ -103,11 +116,34 @@ void FGame::startCapitalsGame()
     gameborders = false;
     gameareas = false;
     gamecapitals = true;
+    setFlags(gameflags);
+
 
     questionList.clear();
 
+    if(flagMap.isEmpty())
+        flagMap = generateFlagMap();
+
     if(capitalMap.isEmpty())
         capitalMap = generateCapitalMap();
+}
+
+void FGame::startAreasGame()
+{
+    gameflags = false;
+    gameborders = false;
+    gameareas = true;
+    gamecapitals = false;
+    setFlags(gameflags);
+
+
+    questionList.clear();
+
+    if(flagMap.isEmpty())
+        flagMap = generateFlagMap();
+
+    if(areaMap.isEmpty())
+        areaMap = generateAreaMap();
 }
 
 void FGame::startNextQuestion()
@@ -127,7 +163,7 @@ void FGame::cancelGame()
     answerList.clear();
 
     counter = 0;
-    setquestionCounter(counter);
+    setQuestionCounter(counter);
 
 }
 
@@ -393,13 +429,27 @@ int FGame::questionCounter() const
     return m_questionCounter;
 }
 
-void FGame::setquestionCounter(int newquestionCounter)
+void FGame::setQuestionCounter(int newquestionCounter)
 {
     if (m_questionCounter == newquestionCounter)
         return;
     m_questionCounter = newquestionCounter;
     emit questionCounterChanged();
 }
+
+bool FGame::flags() const
+{
+    return m_flags;
+}
+
+void FGame::setFlags(bool newFlags)
+{
+    if (m_flags == newFlags)
+        return;
+    m_flags = newFlags;
+    emit flagsChanged();
+}
+
 
 int FGame::getFlagsCount()
 {
@@ -472,13 +522,45 @@ QMap<QString, QString> FGame::generateFlagMap()
             QFile file(filepath);
             if(file.exists())
                 map.insert(key, filepath);
+        }else{
+            countrieCodesMap.remove(key);
+        }
+    }
+
+//    qDebug() << "Countrie map:" << countrieCodesMap.count();
+//    qDebug() << "Flag map:" << map.count();
+    return map;
+}
+
+QMap<QString, QString> FGame::generateCapitalMap()
+{
+    QMap<QString, QString>map;
+
+    if(countrieCodesMap.isEmpty())
+        countrieCodesMap = generateCountrieCodesMap();
+
+
+    QMapIterator<QString, QString> it(countrieCodesMap);
+    while (it.hasNext()) {
+            it.next();
+
+            QString alpha2 = it.key();
+            QVariant capital = readData(alpha2, "capital");
+
+            if(capital.isValid()){
+                if(countrieCodesMap.contains(alpha2)){
+                    QString t = capital.toString();
+                    QString u = upper(t);
+                    //qDebug() << u;
+                    map.insert(alpha2, u);
+                }
             }
     }
 
     return map;
 }
 
-QMap<QString, QString> FGame::generateCapitalMap()
+QMap<QString, QString> FGame::generateBorderMap()
 {
     QMap<QString, QString>map;
 
@@ -491,16 +573,60 @@ QMap<QString, QString> FGame::generateCapitalMap()
             it.next();
 
             QString alpha2 = it.key();
-            QVariant capital = readData(alpha2, "capital");
-            //qDebug() << "Code: " << alpha2 << ":" << capital;
-            if(capital.isValid()){
+            QVariant borders = readData(alpha2, "neighbors");
 
+            if(borders.isValid()){
+                if(countrieCodesMap.contains(alpha2)){
 
+                    QString country = countrieCodesMap.value(alpha2);
+                    QStringList bl = borders.toStringList();
+                    QString bs;
+                    foreach (QString c, bl) {
+                        bs.append(countrieCodesMap.value(c) );
+                        if(bl.last() != c)
+                            bs.append(", ");
+                    }
 
+                    if(bl.isEmpty())
+                        bs = "None";
+
+                    //qDebug() << country << ":" << bs;
+                    map.insert(alpha2, bs);
+                }
             }
     }
 
+    return map;
+}
 
+QMap<QString, double> FGame::generateAreaMap()
+{
+    QMap<QString,double>map;
+
+    if(countrieCodesMap.isEmpty())
+            countrieCodesMap = generateCountrieCodesMap();
+
+
+    QMapIterator<QString, QString> it(countrieCodesMap);
+    while (it.hasNext()) {
+            it.next();
+
+            QString alpha2 = it.key();
+            QVariant area = readData(alpha2, "area");
+
+            QVariantMap vmap = area.toMap();
+
+            if(area.isValid()){
+                if(countrieCodesMap.contains(alpha2)){
+                    bool ok;
+                    double km2 = vmap.value("km2").toDouble(&ok);
+                    if(ok){
+                        //qDebug() << alpha2 << " : " << vmap.value("km2");
+                        map.insert(alpha2, km2);
+                    }
+                }
+            }
+    }
 
     return map;
 }
@@ -513,22 +639,184 @@ void FGame::generateQuestion()
     }
 
     counter++;
-    setquestionCounter( counter );
+    setQuestionCounter( counter );
+
+    // Set max value for random nr
+    int max = 0;
+    if(gameflags)
+        max = flagMap.count()-1;
+
+    if(gamecapitals)
+        max = capitalMap.count()-1;
+
+    if(gameborders)
+        max = borderMap.count()-1;
+
+    if(gameareas)
+        max = areaMap.count()-1;
 
 
+    int nr = getRandomNumber(max);
+    while (qList.contains(nr)) {
+        nr = getRandomNumber(max);
+    }
+    qList << nr; // Questionlist number
 
-    QString type = "question";
-    if(gameflags){
+    QString key;
 
-        QString key = getRandomCountrieCode(flagMap.count()-1, type);
-        QString path = flagMap.value(key);
-        setFlagPath(path);
+    if(gameflags)
+        key = countrieCodesMap.keys().at(nr);
 
-        QString countrie = countrieCodesMap.value(key);
-        setSolution(countrie);
+    if(gamecapitals)
+        key = capitalMap.keys().at(nr);
+
+    if(gameborders)
+        key = borderMap.keys().at(nr);
+
+    if(gameareas)
+        key = areaMap.keys().at(nr);
+
+
+    QString country = countrieCodesMap.value(key);
+
+    if(!flagMap.contains(key)){
+        emit errorMessage("Failed to generate question!");
+        return;
     }
 
-    generateAnswers();
+
+
+//    qDebug() << "Key: "  << key;
+//    qDebug() << "Country: "  << country;
+
+
+    QString flagpath = flagMap.value(key);
+    setFlagPath(flagpath);
+
+
+    aList.clear();
+
+    if(gameflags){
+        setSolution(country);
+        aList << nr;
+    }
+
+    if(gamecapitals){
+        QString city = capitalMap.value(key);
+        setSolution(city);
+        setQuestion("Capital of " + country + "?");
+        int nr = capitalMap.values().indexOf(city);
+        aList << nr;
+    }
+
+    if(gameareas){
+        double km2 = areaMap.value(key);
+        QString km2s = QString("%1 km2").arg(km2);
+        QString country = countrieCodesMap.value(key);
+        setSolution(km2s);
+        setQuestion("Size of " + country + "?");
+        int nr = areaMap.keys().indexOf(key);
+        aList << nr;
+    }
+
+    if(gameborders){
+        QString borders = borderMap.value(key);
+        QString country = countrieCodesMap.value(key);
+        setSolution(borders);
+        setQuestion("Neighbor(s) of " + country + "?");
+        int nr = borderMap.values().indexOf(borders);
+        aList << nr;
+    }
+
+
+    // Generate answers
+    // Clear all answers
+    setAnswerA("");
+    setAnswerB("");
+    setAnswerC("");
+    setAnswerD("");
+    QList<int>pList;
+
+
+    for (int i = 0; i < 3; i++) {
+
+        int nr = getRandomNumber(max);
+        while (aList.contains(nr)) {
+             nr = getRandomNumber(max);
+        }
+        aList << nr;
+
+        int pos = getRandomNumber(4);
+        while (pList.contains(pos)) {
+             pos = getRandomNumber(4);
+        }
+        pList << pos;
+
+        QString k;
+        QString a;
+        if(gameflags){
+             k = countrieCodesMap.keys().at(nr);
+             a = countrieCodesMap.value(k);
+        }
+        if(gamecapitals){
+             k = capitalMap.keys().at(nr);
+             a = capitalMap.value(k);
+        }
+        if(gameborders){
+             k = borderMap.keys().at(nr);
+             a = borderMap.value(k);
+        }
+        if(gameareas){
+             k = areaMap.keys().at(nr);
+             double km = areaMap.value(k);
+             a = QString("%1 km2").arg(km);
+        }
+
+        if(pos == 0)
+             setAnswerA(a);
+        if(pos == 1)
+             setAnswerB(a);
+        if(pos == 2)
+             setAnswerC(a);
+        if(pos == 3)
+             setAnswerD(a);
+
+        if(m_answerA.isEmpty())
+             setAnswerA(solution());
+        if(m_answerB.isEmpty())
+             setAnswerB(solution());
+        if(m_answerC.isEmpty())
+             setAnswerC(solution());
+        if(m_answerD.isEmpty())
+             setAnswerD(solution());
+    }
+
+
+//   generateAnswers();
+
+//    QString type = "question";
+//    if(gameflags){
+
+//        QString key = getRandomCountrieCode(flagMap.count()-1, type);
+//        QString path = flagMap.value(key);
+//        setFlagPath(path);
+
+//        QString countrie = countrieCodesMap.value(key);
+//        setSolution(countrie);
+//    }
+
+//    if(gamecapitals){
+
+//        QString key = getRandomCountrieCode(capitalMap.count()-1, type);
+//        QString capital = capitalMap.value(key);
+//        setSolution(capital);
+
+//        QString countrie = countrieCodesMap.value(key);
+//        setQuestion("Capital of " + countrie + "?");
+
+//    }
+
+//    generateAnswers();
 }
 
 void FGame::generateAnswers()
@@ -580,6 +868,48 @@ void FGame::generateAnswers()
             setAnswerC(solution());
         if(posList.value(3).isEmpty())
             setAnswerD(solution());
+
+    }
+
+    if(gamecapitals){
+
+        QString solutionKey = countrieCodesMap.key(solution());
+        answerList << solutionKey;
+
+        for(int i = 0; i < 3; i++){
+
+            QString key = getRandomCountrieCode(capitalMap.size()-1, type);
+            QString capital = capitalMap.value(key);
+
+            int pos = getRandomNumber(4);
+            while (posList.contains(pos)) {
+                pos = getRandomNumber(4);
+            }
+            posList.insert(pos, capital);
+
+            if(pos == 0)
+                setAnswerA(capital);
+
+            if(pos == 1)
+                setAnswerB(capital);
+
+            if(pos == 2)
+                setAnswerC(capital);
+
+            if(pos == 3)
+                setAnswerD(capital);
+
+            if(posList.value(0).isEmpty())
+                setAnswerA(solution());
+            if(posList.value(1).isEmpty())
+                setAnswerB(solution());
+            if(posList.value(2).isEmpty())
+                setAnswerC(solution());
+            if(posList.value(3).isEmpty())
+                setAnswerD(solution());
+
+
+        }
 
     }
 }
@@ -666,4 +996,51 @@ QVariant FGame::readData(const QString &alpha2, const QString &key)
     }
 
     return result;
+}
+
+// Rewrite this function
+QString FGame::upper(const QString &source)
+{
+    if(source.isEmpty())
+        return "";
+
+    QString s;
+
+    for(int i = 0; i < source.size(); i++){
+
+        QString u;
+        bool space;
+        bool minus;
+
+
+        u = source.at(i);
+
+        if(space){
+            u = u.toUpper();
+            space = false;
+        }
+
+        if(minus){
+            u = u.toUpper();
+            minus = false;
+        }
+
+
+        if(i == 0)
+            u = u.toUpper();
+
+
+        if(u == " "){
+            space = true;
+        }
+
+        if(u == "-"){
+            minus = true;
+        }
+
+        s.append(u);
+
+    }
+
+    return s;
 }

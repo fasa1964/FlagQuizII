@@ -24,7 +24,8 @@ class FGame : public QObject
     Q_PROPERTY(QString answerD READ answerD WRITE setAnswerD NOTIFY answerDChanged)
     Q_PROPERTY(QString solution READ solution WRITE setSolution NOTIFY solutionChanged)
     Q_PROPERTY(QString flagPath READ flagPath WRITE setFlagPath NOTIFY flagPathChanged)
-    Q_PROPERTY(int questionCounter READ questionCounter WRITE setquestionCounter NOTIFY questionCounterChanged)
+    Q_PROPERTY(int questionCounter READ questionCounter WRITE setQuestionCounter NOTIFY questionCounterChanged)
+    Q_PROPERTY(bool flags READ flags WRITE setFlags NOTIFY flagsChanged)
 
 
 public:
@@ -33,6 +34,7 @@ public:
     Q_INVOKABLE void startFlagsGame();
     Q_INVOKABLE void startBordersGame();
     Q_INVOKABLE void startCapitalsGame();
+    Q_INVOKABLE void startAreasGame();
     Q_INVOKABLE void startNextQuestion();
     Q_INVOKABLE void cancelGame();
 
@@ -78,7 +80,11 @@ public:
     void setAnswerD(const QString &newAnswerD);
 
     int questionCounter() const;
-    void setquestionCounter(int newquestionCounter);
+    void setQuestionCounter(int newquestionCounter);
+
+
+    bool flags() const;
+    void setFlags(bool newFlags);
 
 signals:
 
@@ -87,6 +93,7 @@ signals:
     void bordersAvailableChanged();
     void areasAvailableChanged();
     void capitalsAvailableChanged();
+    void flagsChanged();
 
     void questionChanged();
     void flagPathChanged();
@@ -96,6 +103,7 @@ signals:
     void answerCChanged();
     void answerDChanged();
     void questionCounterChanged();
+
 
     void selectButton(const QString &button);
     void errorMessage(const QString &errortext);
@@ -110,6 +118,7 @@ private:
     bool m_bordersAvailable;
     bool m_areasAvailable;
     bool m_capitalsAvailable;
+    bool m_flags;
 
     // Type of game
     bool gameflags;
@@ -145,10 +154,18 @@ private:
     QMap<QString, QString> capitalMap;
     QMap<QString, QString> generateCapitalMap();
 
+    QMap<QString, QString> borderMap;
+    QMap<QString, QString> generateBorderMap();
+
+    QMap<QString, double> areaMap;
+    QMap<QString, double> generateAreaMap();
+
     // Get random question
     void generateQuestion();
     void generateAnswers();
     QStringList questionList;
+    QList<int> qList;
+    QList<int> aList;
     QStringList answerList;
 
     QString getRandomCountrieCode(int max, QString &type);
@@ -157,7 +174,7 @@ private:
     // Get data from
     QVariant readData(const QString &alpha2, const QString &key);
 
-
+    QString upper(const QString &source);
 };
 
 #endif // FGAME_H
