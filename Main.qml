@@ -171,7 +171,7 @@ Window {
         width: parent.width-50
         height: 200
         x:25
-        y: root.height/2 - gamemenu.height/2
+        y: root.height/2 - gamemenu.height/2 - 30
         color: "transparent"
         visible: false
 
@@ -216,6 +216,17 @@ Window {
             anchors.topMargin: 5
             disable: game.areasAvailable ? false : true
             onButtonclicked: { game.startAreasGame(); nextQuestion() ; gamemenu.visible = false; gamefield.visible = true}
+        }
+        FButton{
+            id: continentbutton
+            buttontext: qsTr("Continent")
+            width: flagsbutton.width
+            height: flagsbutton.height
+            anchors.left: bordersbutton.left
+            anchors.top: bordersbutton.bottom
+            anchors.topMargin: 5
+            disable: game.continentAvailable ? false : true
+            onButtonclicked: { }
         }
     }
 
