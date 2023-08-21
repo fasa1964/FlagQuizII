@@ -29,10 +29,12 @@ FGame::FGame(QObject *parent)
         setBordersAvailable(true);
         setAreasAvailable(true);
         setCapitalsAvailable(true);
+        setContinentAvailable(true);
     }else{
         setBordersAvailable(false);
         setAreasAvailable(false);
         setCapitalsAvailable(false);
+        setContinentAvailable(false);
     }
 
     // Type of game
@@ -40,6 +42,7 @@ FGame::FGame(QObject *parent)
     gameborders = false;
     gameareas = false;
     gamecapitals = false;
+    gamecontinent = false;
     setFlags(false);
 
 
@@ -73,6 +76,15 @@ FGame::FGame(QObject *parent)
     pointMap.insert(14, "500.000€");
     pointMap.insert(15, "1.000.000€");
 
+    // Define continent map
+    continentCodeMap.insert("af", "Afrika");
+    continentCodeMap.insert("sa", "Süd Amerika");
+    continentCodeMap.insert("na", "Nord Amerika");
+    continentCodeMap.insert("eu", "Europa");
+    continentCodeMap.insert("as", "Asien");
+    continentCodeMap.insert("eu/as", "Europa/Asien");
+    continentCodeMap.insert("oc", "Australien");
+
 }
 
 void FGame::startFlagsGame()
@@ -81,6 +93,7 @@ void FGame::startFlagsGame()
     gameborders = false;
     gameareas = false;
     gamecapitals = false;
+    gamecontinent = false;
     gamePoints = 0;
     setFlags(gameflags);
 
@@ -98,6 +111,7 @@ void FGame::startBordersGame()
     gameborders = true;
     gameareas = false;
     gamecapitals = false;
+    gamecontinent = false;
     setFlags(gameflags);
 
     questionList.clear();
@@ -116,6 +130,7 @@ void FGame::startCapitalsGame()
     gameborders = false;
     gameareas = false;
     gamecapitals = true;
+    gamecontinent = false;
     setFlags(gameflags);
 
 
@@ -134,6 +149,7 @@ void FGame::startAreasGame()
     gameborders = false;
     gameareas = true;
     gamecapitals = false;
+    gamecontinent = false;
     setFlags(gameflags);
 
 
@@ -144,6 +160,25 @@ void FGame::startAreasGame()
 
     if(areaMap.isEmpty())
         areaMap = generateAreaMap();
+}
+
+void FGame::startContinentGame()
+{
+    gameflags = false;
+    gameborders = false;
+    gameareas = false;
+    gamecapitals = false;
+    gamecontinent = true;
+    setFlags(gameflags);
+
+
+    questionList.clear();
+
+    if(flagMap.isEmpty())
+        flagMap = generateFlagMap();
+
+    if(continentMap.isEmpty())
+        continentMap = generateContinentMap();
 }
 
 void FGame::startNextQuestion()
@@ -450,6 +485,19 @@ void FGame::setFlags(bool newFlags)
     emit flagsChanged();
 }
 
+bool FGame::continentAvailable() const
+{
+    return m_continentAvailable;
+}
+
+void FGame::setContinentAvailable(bool newContinentAvailable)
+{
+    if (m_continentAvailable == newContinentAvailable)
+        return;
+    m_continentAvailable = newContinentAvailable;
+    emit continentAvailableChanged();
+}
+
 
 int FGame::getFlagsCount()
 {
@@ -599,6 +647,34 @@ QMap<QString, QString> FGame::generateBorderMap()
     return map;
 }
 
+QMap<QString, QString> FGame::generateContinentMap()
+{
+    QMap<QString, QString>map;
+
+    if(countrieCodesMap.isEmpty())
+        countrieCodesMap = generateCountrieCodesMap();
+
+
+    QMapIterator<QString, QString> it(countrieCodesMap);
+    while (it.hasNext()) {
+            it.next();
+
+            QString alpha2 = it.key();
+            QVariant cont = readData(alpha2, "continent");
+
+            if(cont.isValid()){
+                if(countrieCodesMap.contains(alpha2)){
+
+                    QString key = cont.toString();
+                    //QString continent = continentMap.value(key);
+                    map.insert(alpha2, key);
+                }
+            }
+    }
+
+    return map;
+}
+
 QMap<QString, double> FGame::generateAreaMap()
 {
     QMap<QString,double>map;
@@ -655,6 +731,9 @@ void FGame::generateQuestion()
     if(gameareas)
         max = areaMap.count()-1;
 
+    if(gamecontinent)
+        max = continentMap.count()-1;
+
 
     int nr = getRandomNumber(max);
     while (qList.contains(nr)) {
@@ -676,6 +755,9 @@ void FGame::generateQuestion()
     if(gameareas)
         key = areaMap.keys().at(nr);
 
+    if(gamecontinent)
+        key = continentMap.keys().at(nr);
+
 
     QString country = countrieCodesMap.value(key);
 
@@ -686,14 +768,15 @@ void FGame::generateQuestion()
 
 
 
-//    qDebug() << "Key: "  << key;
-//    qDebug() << "Country: "  << country;
+    qDebug() << "Key: "  << key;
+    qDebug() << "Country: "  << country;
 
 
     QString flagpath = flagMap.value(key);
     setFlagPath(flagpath);
 
 
+    // Clear answer list
     aList.clear();
 
     if(gameflags){
@@ -728,6 +811,19 @@ void FGame::generateQuestion()
         aList << nr;
     }
 
+    if(gamecontinent){
+        QString continentCode = continentMap.value(key);
+        QString continentName = continentCodeMap.value(continentCode);
+        //QString country = countrieCodesMap.value(key);
+        setSolution(continentName);
+        setQuestion("Continent of " + country + "?");
+        int nr = continentCodeMap.values().indexOf(continentName);
+        aList << nr;
+        max = continentCodeMap.count()-1;
+//        qDebug() << "Code: " << continentCode;
+//        qDebug() << "Name: " << continentName;
+    }
+
 
     // Generate answers
     // Clear all answers
@@ -735,7 +831,7 @@ void FGame::generateQuestion()
     setAnswerB("");
     setAnswerC("");
     setAnswerD("");
-    QList<int>pList;
+    QList<int>pList; // List of position
 
 
     for (int i = 0; i < 3; i++) {
@@ -766,6 +862,10 @@ void FGame::generateQuestion()
              k = borderMap.keys().at(nr);
              a = borderMap.value(k);
         }
+        if(gamecontinent){
+             k = continentCodeMap.keys().at(nr);
+             a = continentCodeMap.value(k);
+        }
         if(gameareas){
              k = areaMap.keys().at(nr);
              double km = areaMap.value(k);
@@ -791,32 +891,6 @@ void FGame::generateQuestion()
              setAnswerD(solution());
     }
 
-
-//   generateAnswers();
-
-//    QString type = "question";
-//    if(gameflags){
-
-//        QString key = getRandomCountrieCode(flagMap.count()-1, type);
-//        QString path = flagMap.value(key);
-//        setFlagPath(path);
-
-//        QString countrie = countrieCodesMap.value(key);
-//        setSolution(countrie);
-//    }
-
-//    if(gamecapitals){
-
-//        QString key = getRandomCountrieCode(capitalMap.count()-1, type);
-//        QString capital = capitalMap.value(key);
-//        setSolution(capital);
-
-//        QString countrie = countrieCodesMap.value(key);
-//        setQuestion("Capital of " + countrie + "?");
-
-//    }
-
-//    generateAnswers();
 }
 
 void FGame::generateAnswers()

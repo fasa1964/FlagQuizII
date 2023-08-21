@@ -226,7 +226,7 @@ Window {
             anchors.top: bordersbutton.bottom
             anchors.topMargin: 5
             disable: game.continentAvailable ? false : true
-            onButtonclicked: { }
+            onButtonclicked: { game.startContinentGame(); nextQuestion() ; gamemenu.visible = false; gamefield.visible = true }
         }
     }
 

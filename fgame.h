@@ -16,6 +16,7 @@ class FGame : public QObject
     Q_PROPERTY(bool bordersAvailable READ bordersAvailable WRITE setBordersAvailable NOTIFY bordersAvailableChanged)
     Q_PROPERTY(bool areasAvailable READ areasAvailable WRITE setAreasAvailable NOTIFY areasAvailableChanged)
     Q_PROPERTY(bool capitalsAvailable READ capitalsAvailable WRITE setCapitalsAvailable NOTIFY capitalsAvailableChanged)
+    Q_PROPERTY(bool continentAvailable READ continentAvailable WRITE setContinentAvailable NOTIFY continentAvailableChanged)
 
     Q_PROPERTY(QVariant question READ question WRITE setQuestion NOTIFY questionChanged)
     Q_PROPERTY(QString answerA READ answerA WRITE setAnswerA NOTIFY answerAChanged)
@@ -35,6 +36,7 @@ public:
     Q_INVOKABLE void startBordersGame();
     Q_INVOKABLE void startCapitalsGame();
     Q_INVOKABLE void startAreasGame();
+    Q_INVOKABLE void startContinentGame();
     Q_INVOKABLE void startNextQuestion();
     Q_INVOKABLE void cancelGame();
 
@@ -86,6 +88,9 @@ public:
     bool flags() const;
     void setFlags(bool newFlags);
 
+    bool continentAvailable() const;
+    void setContinentAvailable(bool newContinentAvailable);
+
 signals:
 
     // QML Properties
@@ -93,6 +98,7 @@ signals:
     void bordersAvailableChanged();
     void areasAvailableChanged();
     void capitalsAvailableChanged();
+    void continentAvailableChanged();
     void flagsChanged();
 
     void questionChanged();
@@ -118,6 +124,7 @@ private:
     bool m_bordersAvailable;
     bool m_areasAvailable;
     bool m_capitalsAvailable;
+    bool m_continentAvailable;
     bool m_flags;
 
     // Type of game
@@ -125,6 +132,7 @@ private:
     bool gameborders;
     bool gameareas;
     bool gamecapitals;
+    bool gamecontinent;
 
     // Question and Answers
     QVariant m_question;
@@ -156,6 +164,10 @@ private:
 
     QMap<QString, QString> borderMap;
     QMap<QString, QString> generateBorderMap();
+
+    QMap<QString, QString> continentCodeMap;
+    QMap<QString, QString> continentMap;
+    QMap<QString, QString> generateContinentMap();
 
     QMap<QString, double> areaMap;
     QMap<QString, double> generateAreaMap();
