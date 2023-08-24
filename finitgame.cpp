@@ -98,10 +98,9 @@ void FInitGame::startDownloadGameDatas()
     }
 
     if(!sslSupport()){
-        emit errorMessage(tr("Your device does not support SSL (Secure Socket Layer). Breaking up to download game datas!"));
+        emit errorMessage(tr("Your device does not support SSL (Secure Socket Layer). I'm Breaking up to download game datas!"));
         return;
     }
-
 
 
     if(!downloadQueue.isEmpty()){
