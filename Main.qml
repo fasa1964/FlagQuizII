@@ -14,7 +14,6 @@ Window {
     color: "#263238"
 
     property bool android: false
-    property var pointsArray: []
 
     // For timerrectangle
     property int delay: 20
@@ -25,10 +24,15 @@ Window {
 
 
     function showGameMenu(){
+
         gamefield.visible = false
         gamemenu.visible = true
 
-        removePoints()
+        gameover_timer.running = false
+
+        gameovertext.text = ""
+        gameovertext.visible = false
+        particleGameOver.running = false
 
         joker50Button.disable = false
         jokerPubButton.disable = false
@@ -37,17 +41,30 @@ Window {
 
     function removePoints(){
 
-        for(var i = 0; i < pointsArray.length; i++)
-            pointsArray[i].remove()
+        while(pointsModel.count > 0){
+            pointsModel.get(0).obj.destroy()
+            pointsModel.remove(0)
+        }
 
-        pointsModel.clear()
-        game.cancelGame()
+
     }
 
     function gameIsOver(text){
+
         // Do something when game is over
         questiontimer.stop()
+        gamefield.visible = false
 
+        gameovertext.visible = true
+        gameovertext.text = text
+
+        overlife = 2400
+        msecond = 0
+        second = 0
+        gameover_timer.start()
+        particleGameOver.start()
+
+        removePoints()
     }
 
     function nextQuestion(){
@@ -63,6 +80,7 @@ Window {
                 if (component.status === Component.Ready)
                 {
                     var point = component.createObject(gamefield, {x: 40, y: 0});
+
                     if(point === null){
                         showMessage("Error", "Creating object's failed!", 0, true)
                     }else{
@@ -71,7 +89,7 @@ Window {
                         point.x = gamefield.x + 10 + xpos
 
                         pointsModel.append({"obj":point})
-                        pointsArray.push(point)
+
                     }
                 }
                 else
@@ -444,12 +462,12 @@ Window {
             Text{ text: second; anchors.centerIn: parent; color: "white" }
 
         }
-
-
-
     }
 
+
+    // Game Over
     ParticleSystem {
+            id: particleGameOver
             anchors.fill: parent
             running: false
             ImageParticle {
@@ -460,7 +478,7 @@ Window {
             Emitter {
                 group: "stars"
                 emitRate: 800
-                lifeSpan: 2400
+                lifeSpan: overlife
                 size: 24
                 sizeVariation: 8
                 anchors.fill: parent
@@ -479,7 +497,7 @@ Window {
             Emitter {
                 anchors.centerIn: parent
                 emitRate: 400
-                lifeSpan: 2400
+                lifeSpan: overlife
                 size: 48
                 sizeVariation: 8
                 velocity: AngleDirection {angleVariation: 180; magnitude: 60}
@@ -489,6 +507,42 @@ Window {
                 anchors.fill: parent
                 strength: 2
             }
+    }
+
+    property int overlife: 2400
+
+    Text {
+            id: gameovertext
+            text: ""
+            anchors.centerIn: parent
+            font.pointSize: 48
+            color: "blue"
+            style: Text.Sunken;
+            styleColor: "#AAAAAA"
+    }
+
+
+    Timer{
+        id: gameover_timer
+        repeat: true
+        interval: 100
+        onTriggered: {
+
+            msecond += 100
+            if(msecond >= 1000){ // one second
+                msecond = 0
+                second++
+            }
+
+            overlife = overlife - 75
+
+            if(overlife < 0){
+
+                particleGameOver.stop()
+                gameover_timer.stop()
+            }
+
+        }
     }
 
 
