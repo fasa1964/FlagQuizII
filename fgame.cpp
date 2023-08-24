@@ -12,6 +12,7 @@
 #include <QJsonObject>
 
 #include <QRandomGenerator>
+#include <QDoubleValidator>
 
 #include <QDebug>
 
@@ -37,13 +38,8 @@ FGame::FGame(QObject *parent)
         setContinentAvailable(false);
     }
 
-    // Type of game
-    gameflags = false;
-    gameborders = false;
-    gameareas = false;
-    gamecapitals = false;
-    gamecontinent = false;
-    setFlags(false);
+    // Set all varable to 0
+    setupVariables();
 
 
     setQuestion("This is my question");
@@ -54,10 +50,7 @@ FGame::FGame(QObject *parent)
     setSolution("Antwort C");
     setFlagPath("");
 
-    counter = 0;
-    setQuestionCounter(counter);
     maxQuestion = 15;
-    gamePoints = 0;
 
     // Setup points
     pointMap.insert(1, "50€");
@@ -89,32 +82,22 @@ FGame::FGame(QObject *parent)
 
 void FGame::startFlagsGame()
 {
-    gameflags = true;
-    gameborders = false;
-    gameareas = false;
-    gamecapitals = false;
-    gamecontinent = false;
-    gamePoints = 0;
-    setFlags(gameflags);
+    setupVariables();
 
-    questionList.clear();
+    gameflags = true;
+    setFlags(gameflags);
 
     if(flagMap.isEmpty())
         flagMap = generateFlagMap();
 
-    //generateQuestion();
 }
 
 void FGame::startBordersGame()
 {
-    gameflags = false;
-    gameborders = true;
-    gameareas = false;
-    gamecapitals = false;
-    gamecontinent = false;
-    setFlags(gameflags);
+    setupVariables();
 
-    questionList.clear();
+    gameborders = true;
+    setFlags(gameflags);
 
     if(flagMap.isEmpty())
         flagMap = generateFlagMap();
@@ -126,15 +109,9 @@ void FGame::startBordersGame()
 
 void FGame::startCapitalsGame()
 {
-    gameflags = false;
-    gameborders = false;
-    gameareas = false;
+    setupVariables();
     gamecapitals = true;
-    gamecontinent = false;
     setFlags(gameflags);
-
-
-    questionList.clear();
 
     if(flagMap.isEmpty())
         flagMap = generateFlagMap();
@@ -145,15 +122,11 @@ void FGame::startCapitalsGame()
 
 void FGame::startAreasGame()
 {
-    gameflags = false;
-    gameborders = false;
+
+    setupVariables();
+
     gameareas = true;
-    gamecapitals = false;
-    gamecontinent = false;
     setFlags(gameflags);
-
-
-    questionList.clear();
 
     if(flagMap.isEmpty())
         flagMap = generateFlagMap();
@@ -164,15 +137,11 @@ void FGame::startAreasGame()
 
 void FGame::startContinentGame()
 {
-    gameflags = false;
-    gameborders = false;
-    gameareas = false;
-    gamecapitals = false;
+
+    setupVariables();
+
     gamecontinent = true;
     setFlags(gameflags);
-
-
-    questionList.clear();
 
     if(flagMap.isEmpty())
         flagMap = generateFlagMap();
@@ -188,18 +157,8 @@ void FGame::startNextQuestion()
 
 void FGame::cancelGame()
 {
-    gameflags = false;
-    gameborders = false;
-    gameareas = false;
-    gamecapitals = false;
-    gamePoints = 0;
-
-    questionList.clear();
-    answerList.clear();
-
-    counter = 0;
-    setQuestionCounter(counter);
-
+    setupVariables();
+    emit gameOver("");
 }
 
 void FGame::setJoker50()
@@ -695,9 +654,16 @@ QMap<QString, double> FGame::generateAreaMap()
             if(area.isValid()){
                 if(countrieCodesMap.contains(alpha2)){
                     bool ok;
-                    double km2 = vmap.value("km2").toDouble(&ok);
+                    QDoubleValidator val;
+                    val.setLocale(QLocale::C);
+                    val.setNotation(QDoubleValidator::StandardNotation);
+                    val.setDecimals(2);
+                    qreal km2 = vmap.value("km2").toDouble(&ok);
+                    QString km = QString::number(km2);
+                    val.fixup(km);
+                    km2Map.insert(alpha2, km);
                     if(ok){
-                        //qDebug() << alpha2 << " : " << vmap.value("km2");
+                        //qDebug() << alpha2 << " : " << km;
                         map.insert(alpha2, km2);
                     }
                 }
@@ -710,6 +676,7 @@ QMap<QString, double> FGame::generateAreaMap()
 void FGame::generateQuestion()
 {
     if(counter >= maxQuestion){
+
         emit gameOver( pointMap.value(gamePoints));
         return;
     }
@@ -768,8 +735,8 @@ void FGame::generateQuestion()
 
 
 
-    qDebug() << "Key: "  << key;
-    qDebug() << "Country: "  << country;
+//    qDebug() << "Key: "  << key;
+//    qDebug() << "Country: "  << country;
 
 
     QString flagpath = flagMap.value(key);
@@ -981,11 +948,28 @@ void FGame::generateAnswers()
                 setAnswerC(solution());
             if(posList.value(3).isEmpty())
                 setAnswerD(solution());
-
-
         }
 
     }
+}
+
+void FGame::setupVariables()
+{
+    // Type of game
+    gameflags = false;
+    gameborders = false;
+    gameareas = false;
+    gamecapitals = false;
+    gamecontinent = false;
+    setFlags(false);
+
+    counter = 0;
+    setQuestionCounter(counter);
+
+    gamePoints = 0;
+
+    questionList.clear();
+
 }
 
 QString FGame::getRandomCountrieCode(int max, QString &type)

@@ -169,6 +169,7 @@ private:
     QMap<QString, QString> continentMap;
     QMap<QString, QString> generateContinentMap();
 
+    QMap<QString, QString> km2Map;
     QMap<QString, double> areaMap;
     QMap<QString, double> generateAreaMap();
 
@@ -179,6 +180,7 @@ private:
     QList<int> qList;
     QList<int> aList;
     QStringList answerList;
+    void setupVariables();
 
     QString getRandomCountrieCode(int max, QString &type);
     int getRandomNumber(int max);
