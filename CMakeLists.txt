@@ -13,6 +13,7 @@ qt_add_executable(appFlagQuizII
     main.cpp
     finitgame.h finitgame.cpp
     fgame.h fgame.cpp
+    fgamesettings.h fgamesettings.cpp
 )
 
 qt_add_qml_module(appFlagQuizII
@@ -25,7 +26,9 @@ qt_add_qml_module(appFlagQuizII
     FPoints.qml
     FErrorMessage.qml
     FGameInit.qml
+    FSettings.qml
     images.qrc
+    SOURCES fgamesettings.h fgamesettings.cpp
 )
 
 if (ANDROID)
