@@ -10,7 +10,7 @@ Rectangle{
     color: "transparent" //"#263238"
     border.color: "white"
     border.width: 0.5
-    z:2
+    z:3
 
     MouseArea{ anchors.fill: parent  }
 
