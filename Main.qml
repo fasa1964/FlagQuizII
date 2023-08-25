@@ -1,9 +1,12 @@
 import QtQuick
 import QtQuick.Particles
 import QtQuick.Window
+import QtQuick.Controls
 
 import FInitGame 1.0
 import FGame 1.0
+import FGameSettings 1.0
+
 
 Window {
     id: root
@@ -20,7 +23,6 @@ Window {
     property int wfill: 0
     property int msecond: 0
     property int second: 0
-
 
 
     function showGameMenu(){
@@ -123,6 +125,23 @@ Window {
     }
 
 
+    function readSettingsVariables(){
+
+        languageModel.clear()
+
+
+        if(settings.enableLanguage){
+
+            var list = settings.getAvailableLanguages()
+            for(var i = 0; i < list.length; i++)
+                languageModel.append({"name":list[i]})
+
+            languageBox.currentIndex = settings.currentIndex
+
+        }
+
+    }
+
     // C++ Classes
     Init{ id: init
 
@@ -153,6 +172,10 @@ Window {
         onGameOver: (euro) => { gameIsOver(euro) }
     }
 
+    GameSettings{
+        id: settings
+        onErrorOccurred: (errortext) => {  error.errortext = errortext; error.open() }
+    }
 
     // QML
     FErrorMessage{ id: error  }
@@ -177,7 +200,7 @@ Window {
     FAppMenu{
         id: menu
         onCloseApp: { Qt.quit() }
-        onSettingApp: { error.errortext = "Setting is not implemented yet!"; error.open() }
+        onSettingApp: { settingsrect.visible = true; readSettingsVariables() }
         onPlayApp: {  showGameMenu() }
         onInfoApp: {  error.errortext = "Info is not implemented yet!"; error.open() }
         onUpdateApp: {  error.errortext = "Update is not implemented yet!"; error.open() }
@@ -192,6 +215,16 @@ Window {
         y: root.height/2 - gamemenu.height/2 - 30
         color: "transparent"
         visible: false
+
+        Text {
+
+            text: qsTr("Language: ") +  settings.languageName
+            color: "white"
+            anchors.left: parent.left
+            anchors.leftMargin: 5
+            anchors.bottom: flagsbutton.top
+            anchors.bottomMargin: 10
+        }
 
         FButton{
             id: flagsbutton
@@ -545,6 +578,73 @@ Window {
         }
     }
 
+    // Settings
+    ListModel{ id: languageModel }
+    Rectangle {
+        id: settingsrect
+        width: parent.width - 100
+        height: parent.height - 100
+        color: "white"
+        anchors.centerIn: parent
+        z:1
+        visible: false
+
+        FButton{
+            id: cb
+            width: 18
+            height: 18
+            x:5; y:5
+            imageurl: "qrc:/png/close.png"
+            imagevisible: true
+            textvisible: false
+            buttoncolor: "gray"
+            bordercolor: "gray"
+            onButtonclicked: { settingsrect.visible = false }
+        }
+
+
+        Grid{
+            id: sgrid
+            width: parent.width
+            columns: 2
+            columnSpacing: 10
+            rows: 4
+            rowSpacing: 10
+
+            x:5; y:30
+
+            Text {
+                text: "Sound:"
+                font.pointSize: 12
+                color: "gray"
+            }
+
+            CheckBox{
+                id: sbox
+                width: 20
+                height: 20
+                checked: settings.playAudio
+
+                onClicked: { console.log( sbox.checked ) }
+            }
+
+            Text {
+                id: lt
+                text: "Language:"
+                font.pointSize: 12
+                color: "gray"
+            }
+
+            ComboBox{
+                id: languageBox
+                width: parent.width - lt.width - 30
+                model: languageModel
+                enabled: settings.enableLanguage
+                onCurrentTextChanged: { settings.setLanguage(currentText); game.setLanguageCode( settings.languageCode ) }
+
+            }
+        }
+    }
 
     Component.onCompleted: {
 

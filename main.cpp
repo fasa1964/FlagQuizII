@@ -3,6 +3,7 @@
 
 #include <finitgame.h>
 #include <fgame.h>
+#include <fgamesettings.h>
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +16,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<FInitGame>("FInitGame", 1, 0, "Init");
     qmlRegisterType<FGame>("FGame", 1, 0, "Game");
+    qmlRegisterType<FGameSettings>("FGameSettings", 1, 0, "GameSettings");
 
 
     QQmlApplicationEngine engine;

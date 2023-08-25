@@ -78,6 +78,9 @@ FGame::FGame(QObject *parent)
     continentCodeMap.insert("eu/as", "Europa/Asien");
     continentCodeMap.insert("oc", "Australien");
 
+    QLocale locale;
+    QString lcode = locale.bcp47Name();
+    languageCode = lcode;
 }
 
 void FGame::startFlagsGame()
@@ -153,6 +156,12 @@ void FGame::startContinentGame()
 void FGame::startNextQuestion()
 {
     generateQuestion();
+}
+
+void FGame::setLanguageCode(const QString &code)
+{
+    languageCode = code;
+    //qDebug() << "Languagecode: " << code;
 }
 
 void FGame::cancelGame()
@@ -747,6 +756,12 @@ void FGame::generateQuestion()
     aList.clear();
 
     if(gameflags){
+
+        // Translate country
+        QString lc = languageCode;
+        QString alpha2 = countrieCodesMap.key(country);
+        country = translate(languageCode, alpha2);
+
         setSolution(country);
         aList << nr;
     }
@@ -815,11 +830,20 @@ void FGame::generateQuestion()
         }
         pList << pos;
 
-        QString k;
+        QString k; //
         QString a;
         if(gameflags){
+
+
              k = countrieCodesMap.keys().at(nr);
              a = countrieCodesMap.value(k);
+
+             // Translate country
+             QString lc = languageCode;
+             QString alpha2 = countrieCodesMap.key(a);
+             a = translate(languageCode, alpha2);
+
+
         }
         if(gamecapitals){
              k = capitalMap.keys().at(nr);
@@ -1099,6 +1123,50 @@ QString FGame::upper(const QString &source)
         s.append(u);
 
     }
+
+    return s;
+}
+
+QString FGame::translate(const QString &langCode, const QString &alpha2)
+{
+    QString s;
+    QFile file("world.json");
+    if (!file.open(QIODevice::ReadOnly)) {
+        QString f = file.fileName();
+        QString e = file.errorString();
+        QString text = QString("Could not open %1 for reading: %2").arg(f, f.size() ).arg(e, e.size());
+        emit errorMessage(text);
+        return s;
+    }
+
+    QTextStream file_text(&file);
+    QString jsonString = file_text.readAll();
+
+    file.close();
+
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonString.toUtf8());
+
+    if(jsonDoc.isNull())
+        return s;
+
+    if(jsonDoc.isArray()){
+
+        foreach (QJsonValue val, jsonDoc.array()) {
+
+            if(alpha2 == val.toObject().value("alpha2").toString()){
+//                qDebug() << val.toObject().value("id");
+//                qDebug() << val.toObject().value(langCode);
+                s = val.toObject().value(langCode).toString();
+                break;
+            }
+
+
+        }
+
+    }
+
+
+
 
     return s;
 }

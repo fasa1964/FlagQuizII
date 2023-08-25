@@ -17,5 +17,6 @@
         <file>png/JokerTel.png</file>
         <file>png/star.png</file>
         <file>FPoints.qml</file>
+        <file>FSettings.qml</file>
     </qresource>
 </RCC>

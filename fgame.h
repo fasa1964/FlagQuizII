@@ -38,6 +38,7 @@ public:
     Q_INVOKABLE void startAreasGame();
     Q_INVOKABLE void startContinentGame();
     Q_INVOKABLE void startNextQuestion();
+    Q_INVOKABLE void setLanguageCode(const QString &code);
     Q_INVOKABLE void cancelGame();
 
     // Jokers
@@ -189,6 +190,10 @@ private:
     QVariant readData(const QString &alpha2, const QString &key);
 
     QString upper(const QString &source);
+
+    QString languageCode;
+    QString translate(const QString &langCode, const QString &alpha2);
+
 };
 
 #endif // FGAME_H
