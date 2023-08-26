@@ -38,7 +38,6 @@ Rectangle {
                 finishedTimer()
             }
         }
-
     }
 
 
@@ -56,7 +55,7 @@ Rectangle {
     property real buttonradius: 5
     property real imageopacity: 1.0
 
-    property real fontsize: root.android ? 13 : 12
+    property real fontsize: buttontext.length < 60 ? root.android ? 13 : 12 : root.android ? 10 : 9
     property int msec: 100
 
     property int life: 500      // LifeSpan for stars
