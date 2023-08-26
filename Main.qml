@@ -127,16 +127,17 @@ Window {
 
     function readSettingsVariables(){
 
-        languageModel.clear()
-
 
         if(settings.enableLanguage){
 
-            var list = settings.getAvailableLanguages()
-            for(var i = 0; i < list.length; i++)
-                languageModel.append({"name":list[i]})
+            if(languageModel.count <= 0){
 
-            languageBox.currentIndex = settings.currentIndex
+                var list = settings.getAvailableLanguages()
+                for(var i = 0; i < list.length; i++)
+                    languageModel.append({"name":list[i]})
+
+                languageBox.currentIndex = settings.currentIndex
+            }
 
         }
 
