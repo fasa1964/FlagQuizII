@@ -18,5 +18,7 @@
         <file>png/star.png</file>
         <file>FPoints.qml</file>
         <file>FSettings.qml</file>
+        <file>png/flagsicon.png</file>
+        <file>ico/flagsicon.ico</file>
     </qresource>
 </RCC>

@@ -207,13 +207,25 @@ Window {
         onUpdateApp: {  error.errortext = "Update is not implemented yet!"; error.open() }
     }
 
+    // Appicon
+    Image {
+        id: appicon
+        width: parent.width/3
+        fillMode: Image.PreserveAspectFit
+        source: "qrc:/png/flagsicon.png"
+        x: parent.width/2 - appicon.width/2
+        y:50
+        visible: gamemenu.visible ? true : false
+    }
+
+
     // Gamemenu
     Rectangle{
         id: gamemenu
         width: parent.width-50
         height: 200
         x:25
-        y: root.height/2 - gamemenu.height/2 - 30
+        y: root.height/2 - gamemenu.height/2 - 20
         color: "transparent"
         visible: false
 
