@@ -203,7 +203,7 @@ Window {
         onCloseApp: { Qt.quit() }
         onSettingApp: { settingsrect.visible = true; readSettingsVariables() }
         onPlayApp: {  showGameMenu() }
-        onInfoApp: {  error.errortext = "Info is not implemented yet!"; error.open() }
+        onInfoApp: {  inforect.visible = true }
         onUpdateApp: {  error.errortext = "Update is not implemented yet!"; error.open() }
     }
 
@@ -668,7 +668,7 @@ Window {
         height: parent.height - 100
         color: "#F9FBE7"
         anchors.centerIn: parent
-        visible: true
+        visible: false
 
 
         FButton{
