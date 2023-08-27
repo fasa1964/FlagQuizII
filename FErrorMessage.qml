@@ -9,7 +9,7 @@ Rectangle{
     x: root.width
     color: "transparent" //"#263238"
     border.color: "white"
-    border.width: 0.5
+    border.width: 0.8
     z:3
 
     MouseArea{ anchors.fill: parent  }
@@ -20,6 +20,13 @@ Rectangle{
     function open(){ openanim.start() }
     function close(){ closeanim.start() }
 
+    Rectangle{
+        id: errorrect
+        anchors.fill: parent
+        color: "white"
+        opacity: 0.65
+
+    }
 
     FButton{
         id: closebutton
@@ -28,12 +35,14 @@ Rectangle{
         height: 24
         textvisible: true
         textcolor: "white"
+        bordercolor: "white"
         textbold: false
-
+        z:3
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: 5
         onButtonclicked: { close() }
+
     }
 
     Text {
@@ -45,15 +54,12 @@ Rectangle{
         font.letterSpacing: 1.3
         wrapMode: Text.WordWrap
         elide: Text.ElideMiddle
+        z:3
     }
 
-    Rectangle{
-        id: errorrect
-        anchors.fill: parent
-        color: "white"
-        opacity: 0.5
 
-    }
+
+
 
     NumberAnimation on x {
         id: openanim

@@ -353,7 +353,7 @@ void FInitGame::download(const QUrl &url)
 
     if(downloadQueue.isEmpty()){
         setSetup(false);
-        emit errorMessage(tr("Setup has been finished!"));
+        emit errorMessage(tr("Setup has been finished! Restart this application to complete the setup."));
     }else {
         setSetup(true);
     }
