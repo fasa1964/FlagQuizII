@@ -41,6 +41,8 @@ public:
     Q_INVOKABLE void setLanguageCode(const QString &code);
     Q_INVOKABLE void cancelGame();
 
+    Q_INVOKABLE QString getDescriptionText();
+
     // Jokers
     Q_INVOKABLE void setJoker50();
     Q_INVOKABLE void setJokerPub();

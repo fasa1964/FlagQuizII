@@ -78,9 +78,11 @@ FGame::FGame(QObject *parent)
     continentCodeMap.insert("eu/as", "Europa/Asien");
     continentCodeMap.insert("oc", "Australien");
 
+    // Get local for langiage code
     QLocale locale;
     QString lcode = locale.bcp47Name();
     languageCode = lcode;
+
 }
 
 void FGame::startFlagsGame()
@@ -168,6 +170,23 @@ void FGame::cancelGame()
 {
     setupVariables();
     emit gameOver("");
+}
+
+QString FGame::getDescriptionText()
+{
+    QString text;
+
+    QFile textfile("://txt/description.txt");
+    if(textfile.open(QIODevice::ReadOnly)){
+        QTextStream in(&textfile);
+        text = in.readAll();
+    }else{
+        emit errorMessage( textfile.errorString() );
+    }
+
+
+
+    return text;
 }
 
 void FGame::setJoker50()
