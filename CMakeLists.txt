@@ -33,10 +33,14 @@ qt_add_qml_module(appFlagQuizII
     FSettings.qml
     images.qrc
     SOURCES fgamesettings.h fgamesettings.cpp
+
 )
 
 if (ANDROID)
     include(D:/Qt/Android/android_openssl/CMakeLists.txt)
+    set_target_properties(appFlagQuizII PROPERTIES
+            QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android
+     )
 endif()
 
 set_target_properties(appFlagQuizII PROPERTIES
