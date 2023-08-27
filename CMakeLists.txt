@@ -5,6 +5,7 @@ project(FlagQuizII VERSION 2.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
 
+# set icon on windows
 set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/appicon.rc")
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Core Network Svg Gui)

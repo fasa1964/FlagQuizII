@@ -837,7 +837,6 @@ void FGame::generateQuestion()
         QString a;
         if(gameflags){
 
-
              k = countrieCodesMap.keys().at(nr);
              a = countrieCodesMap.value(k);
 
@@ -845,7 +844,6 @@ void FGame::generateQuestion()
              QString lc = languageCode;
              QString alpha2 = countrieCodesMap.key(a);
              a = translate(languageCode, alpha2);
-
 
         }
         if(gamecapitals){
@@ -855,7 +853,8 @@ void FGame::generateQuestion()
         if(gameborders){
              k = borderMap.keys().at(nr);
              a = borderMap.value(k);
-             //qDebug() << "Size" << a.size();
+             //qDebug() << "A:" << a;
+
         }
         if(gamecontinent){
              k = continentCodeMap.keys().at(nr);
