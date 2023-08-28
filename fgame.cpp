@@ -70,13 +70,13 @@ FGame::FGame(QObject *parent)
     pointMap.insert(15, "1.000.000€");
 
     // Define continent map
-    continentCodeMap.insert("af", "Afrika");
-    continentCodeMap.insert("sa", "Süd Amerika");
-    continentCodeMap.insert("na", "Nord Amerika");
-    continentCodeMap.insert("eu", "Europa");
-    continentCodeMap.insert("as", "Asien");
-    continentCodeMap.insert("eu/as", "Europa/Asien");
-    continentCodeMap.insert("oc", "Australien");
+    continentCodeMap.insert("af", "Africa");
+    continentCodeMap.insert("sa", "South America");
+    continentCodeMap.insert("na", "North America");
+    continentCodeMap.insert("eu", "Europe");
+    continentCodeMap.insert("as", "Asia");
+    continentCodeMap.insert("eu/as", "Europe/Asia");
+    continentCodeMap.insert("oc", "Australia/Oceania");
 
     // Get local for langiage code
     QLocale locale;
