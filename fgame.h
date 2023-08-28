@@ -178,18 +178,23 @@ private:
 
     // Get random question
     void generateQuestion();
-    void generateAnswers();
-    QStringList questionList;
+    //void generateAnswers();
+    //QStringList questionList;
     QList<int> qList;
     QList<int> aList;
-    QStringList answerList;
+    //QStringList answerList;
     void setupVariables();
 
-    QString getRandomCountrieCode(int max, QString &type);
+    //QString getRandomCountrieCode(int max, QString &type);
     int getRandomNumber(int max);
+
 
     // Get data from
     QVariant readData(const QString &alpha2, const QString &key);
+
+    int indexOfKeys(const QString &key, const QMap<QString, QString> &map);
+    int indexOfValues(const QString &value, const QMap<QString, QString> &map);
+    QString convertToString(double value);
 
     QString upper(const QString &source);
 
