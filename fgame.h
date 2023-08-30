@@ -182,6 +182,9 @@ private:
     //QStringList questionList;
     QList<int> qList;
     QList<int> aList;
+    QList<QString> questionKeyList;
+    QList<QString> answerKeyList;
+
     //QStringList answerList;
     void setupVariables();
 
@@ -195,6 +198,9 @@ private:
     int indexOfKeys(const QString &key, const QMap<QString, QString> &map);
     int indexOfValues(const QString &value, const QMap<QString, QString> &map);
     QString convertToString(double value);
+    QString getKeyFrom(const QMap<QString,QString> &map, int nr);
+    QString getKeyFrom(const QMap<QString,double> &map, int nr);
+    QString getRandomKey();
 
     QString upper(const QString &source);
 

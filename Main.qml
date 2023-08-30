@@ -660,7 +660,6 @@ Window {
     }
 
     // Information
-
     Rectangle{
         id: inforect
 
@@ -781,7 +780,7 @@ Window {
 
             Text {
                 id: descriptiontext
-                width: parent.width - dt.width
+                width: parent.width - dt.width - 15
                 text: game.getDescriptionText()
                 font.pointSize: root.android ? 13 : 12
                 color: "#1565C0"
@@ -838,7 +837,6 @@ Window {
                     onClicked: { Qt.openUrlExternally("https://github.com/fasa1964/FlagQuizII") }
                 }
             }
-
 
         }
 
