@@ -178,12 +178,15 @@ private:
 
     // Get random question
     void generateQuestion();
-    //void generateAnswers();
+    void generateAnswers(const QString &key);
     //QStringList questionList;
     QList<int> qList;
     QList<int> aList;
     QList<QString> questionKeyList;
     QList<QString> answerKeyList;
+    QString getAnswer(const QString &key);
+
+    bool isIsland(const QString &key);
 
     //QStringList answerList;
     void setupVariables();
