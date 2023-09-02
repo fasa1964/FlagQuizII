@@ -65,8 +65,11 @@ Window {
         overlife = 2400
         msecond = 0
         second = 0
-        gameover_timer.start()
-        particleGameOver.start()
+
+        if(text.length > 0){
+            gameover_timer.start()
+            particleGameOver.start()
+        }
 
         removePoints()
     }
