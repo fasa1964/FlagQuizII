@@ -30,11 +30,13 @@ Window {
         gamefield.visible = false
         gamemenu.visible = true
 
-        gameover_timer.running = false
 
         gameovertext.text = ""
         gameovertext.visible = false
-        particleGameOver.running = false
+
+        // When starting new game don't stop thous timers
+        //gameover_timer.running = false
+        //particleGameOver.running = false
 
         joker50Button.disable = false
         jokerPubButton.disable = false
