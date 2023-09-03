@@ -1,4 +1,5 @@
 import QtQuick
+import QtCore
 import QtQuick.Particles
 import QtQuick.Window
 import QtQuick.Controls
@@ -76,7 +77,12 @@ Window {
             particleGameOver.start()
         }
 
+        if(text === "1.000.000€")
+            applause.play()
+
         removePoints()
+
+        console.log(text)
     }
 
     function nextQuestion(){
@@ -198,6 +204,11 @@ Window {
     SoundEffect{
         id: slash
         source: Qt.resolvedUrl( "qrc:/wav/slash.wav" )
+        volume: soundvolume
+    }
+    SoundEffect{
+        id: applause
+        source: Qt.resolvedUrl( "qrc:/wav/applause.wav" )
         volume: soundvolume
     }
 
@@ -454,10 +465,16 @@ Window {
             anchors.top: buttonA.top
             onButtonclicked: {
 
-                if(game.solution === buttonB.buttontext)
+                if(game.solution === buttonB.buttontext){
                     buttonB.startStars()
-                else
+                    if(playsound)
+                        slash.play()
+
+                }else{
                     nextQuestion()
+                    if(playsound)
+                        dump.play()
+                }
 
                 game.setAnswer(buttonB.buttontext)
 
@@ -476,10 +493,16 @@ Window {
             anchors.topMargin: 10
             onButtonclicked: {
 
-                if(game.solution === buttonC.buttontext)
+                if(game.solution === buttonC.buttontext){
                     buttonC.startStars()
-                else
+                    if(playsound)
+                        slash.play()
+
+                }else{
                     nextQuestion()
+                    if(playsound)
+                        dump.play()
+                }
 
                 game.setAnswer(buttonC.buttontext)
 
@@ -498,10 +521,15 @@ Window {
             anchors.topMargin: 10
             onButtonclicked: {
 
-                if(game.solution === buttonD.buttontext)
+                if(game.solution === buttonD.buttontext){
                     buttonD.startStars()
-                else
+                    if(playsound)
+                        slash.play()
+                }else{
                     nextQuestion()
+                    if(playsound)
+                        dump.play()
+                }
 
                 game.setAnswer(buttonD.buttontext)
 
@@ -623,7 +651,7 @@ Window {
         color: "white"
         anchors.centerIn: parent
         z:1
-        visible: true
+        visible: false
 
         FButton{
             id: cb
@@ -659,7 +687,7 @@ Window {
                 id: sbox
                 width: 20
                 height: 20
-                checked: settings.playAudio
+                checked: playsound
                 onClicked: { playsound = sbox.checked }
             }
 
@@ -675,6 +703,7 @@ Window {
                width: parent.width - vt.width - 50
                from: 0; to: 10
                stepSize: 0.1
+               value: root.soundvolume * 10
                snapMode: Slider.SnapAlways
                onValueChanged: { root.soundvolume = (volumeslider.value/10).toFixed(2) }
 
@@ -887,6 +916,14 @@ Window {
 
         }
 
+    }
+
+
+    // Values to store
+    Settings{
+        id: appsettings
+        property alias sv: root.soundvolume
+        property alias ps: root.playsound
     }
 
     Component.onCompleted: {
