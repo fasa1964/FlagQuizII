@@ -21,5 +21,10 @@
         <file>png/flagsicon.png</file>
         <file>ico/flagsicon.ico</file>
         <file>txt/description.txt</file>
+        <file>wav/applause.wav</file>
+        <file>wav/dump.wav</file>
+        <file>wav/beep.wav</file>
+        <file>wav/slash.mp3</file>
+        <file>wav/slash.wav</file>
     </qresource>
 </RCC>

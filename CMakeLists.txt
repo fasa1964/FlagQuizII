@@ -8,7 +8,7 @@ set(CMAKE_AUTORCC ON)
 # set icon on windows
 set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/appicon.rc")
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Core Network Svg Gui)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Core Network Svg Gui Multimedia)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -57,6 +57,7 @@ target_link_libraries(appFlagQuizII
     PRIVATE Qt6::Network
     PRIVATE Qt6::Svg
     PRIVATE Qt6::Gui
+    PRIVATE Qt6::Multimedia
 )
 
 install(TARGETS appFlagQuizII

@@ -761,6 +761,11 @@ void FGame::generateQuestion()
 
     if(gameborders){
         QString borders = borderMap.value(key);
+        if(local.bcp47Name() != languageCode && borders != "None"){
+            borders = translateString(languageCode, borders);
+            country = translateString(languageCode, country);
+        }
+
         setSolution(borders);
         setQuestion("Neighbor(s) of " + country + "?");
     }
@@ -775,115 +780,6 @@ void FGame::generateQuestion()
 
 
     generateAnswers(key);
-
-            // try to translate -> it's working
-            //        QLocale local;
-            //        if(local.bcp47Name() != languageCode && borders != "None"){
-
-            //            qDebug() << "Code:" << languageCode;
-            //            QStringList borderList = borders.split(", ");
-            //            QString tranBorders;
-            //            //qDebug() << borderList;
-            //            foreach (QString c, borderList) {
-
-            //                    QString key = countrieCodesMap.key(c);
-            //                    QString tc = translate(languageCode, key);
-            //                    //qDebug() << key << ":" << tc;
-            //                    tranBorders.append(tc);
-            //                    tranBorders.append(", ");
-
-            //            }
-
-            //            tranBorders.removeLast();
-            //            tranBorders.removeLast();
-            //            setSolution(tranBorders);
-            //        }
-//    }
-
-
-
-//    for (int i = 0; i < 3; i++) {
-
-//            QString k; // Key
-//            QString a; // Answer
-
-//            int nr = getRandomNumber(max);
-//            while (aList.contains(nr)  ) {
-//                nr = getRandomNumber(max);
-//            }
-//            aList << nr;
-
-//            // Position the possible answers
-//            int pos = getRandomNumber(4);
-//            while (pList.contains(pos)) {
-//                pos = getRandomNumber(4);
-//            }
-//            pList << pos;
-
-
-//            if(gameflags){
-
-//                // Test
-//                int c = 0;
-//                for (auto i = countrieCodesMap.begin(), end = countrieCodesMap.end(); i != end; ++i) {
-
-//                    if(c == nr){
-//                        k = i.key();
-//                        break;
-//                    }
-//                    c++;
-//                }
-
-
-
-//                //k = countrieCodesMap.keys().at(nr);
-//                a = countrieCodesMap.value(k);
-
-//                // Translate country
-//                QString lc = languageCode;
-//                QString alpha2 = countrieCodesMap.key(a);
-//                a = translate(languageCode, alpha2);
-
-//            }
-//            if(gamecapitals){
-//                k = capitalMap.keys().at(nr);
-//                a = capitalMap.value(k);
-//            }
-//            if(gameborders){
-//                k = borderMap.keys().at(nr);
-//                a = borderMap.value(k);
-//                qDebug() << "A:" << a;
-
-//            }
-//            if(gamecontinent){
-//                k = continentCodeMap.keys().at(nr);
-//                a = continentCodeMap.value(k);
-//            }
-//            if(gameareas){
-//                k = areaMap.keys().at(nr);
-//                double km = areaMap.value(k);
-//                a = convertToString(km);
-//            }
-
-//            if(pos == 0)
-//                setAnswerA(a);
-//            if(pos == 1)
-//                setAnswerB(a);
-//            if(pos == 2)
-//                setAnswerC(a);
-//            if(pos == 3)
-//                setAnswerD(a);
-
-//            if(m_answerA.isEmpty())
-//                setAnswerA(solution());
-//            if(m_answerB.isEmpty())
-//                setAnswerB(solution());
-//            if(m_answerC.isEmpty())
-//                setAnswerC(solution());
-//            if(m_answerD.isEmpty())
-//                setAnswerD(solution());
-//    }
-
 }
 
 
@@ -968,8 +864,15 @@ void FGame::generateAnswers(const QString &key)
             a = capitalMap.value(k);
 
         // ToDo -> try to get not double name of "None"
-        if(gameborders)
+        if(gameborders){
             a = borderMap.value(k);
+
+            if(local.bcp47Name() != languageCode && a != "None")
+                a = translateString(languageCode, a);
+
+        }
+
+
 
 
         // ToDo -> get double continent name
@@ -1287,8 +1190,6 @@ bool FGame::isIsland(const QString &key)
     return readData(key, "neighbors").toStringList().isEmpty();
 }
 
-
-
 void FGame::setupVariables()
 {
     // Type of game
@@ -1306,13 +1207,11 @@ void FGame::setupVariables()
 
 }
 
-
 int FGame::getRandomNumber(int max)
 {
     quint32 v = QRandomGenerator::system()->bounded(max);
     return v;
 }
-
 
 QVariant FGame::readData(const QString &alpha2, const QString &key)
 {
@@ -1473,7 +1372,6 @@ QString FGame::getRandomKey()
     return key;
 }
 
-
 int FGame::indexOfKeys(const QString &key, const QMap<QString, QString> &map)
 {
     int index = 0;
@@ -1569,6 +1467,32 @@ QString FGame::translate(const QString &langCode, const QString &alpha2)
 
 
         }
+
+    }
+
+    return s;
+}
+
+QString FGame::translateString(const QString &langCode, const QString &source)
+{
+    QStringList sourceList = source.split(", ");
+    QString s;
+    //qDebug() << sourceList;
+    foreach (QString c, sourceList) {
+
+        QString key = countrieCodesMap.key(c);
+        QString tc = translate(langCode, key);
+
+        if(tc.isEmpty())
+            tc = c; //qDebug() << "Empty:" << key << ":" << c;
+
+        if(key.isEmpty())
+            tc = c;
+
+        s.append(tc);
+
+        if(c != sourceList.last())
+            s.append(", ");
 
     }
 

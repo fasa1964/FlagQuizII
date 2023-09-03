@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Particles
 import QtQuick.Window
 import QtQuick.Controls
+import QtMultimedia
 
 import FInitGame 1.0
 import FGame 1.0
@@ -23,6 +24,10 @@ Window {
     property int wfill: 0
     property int msecond: 0
     property int second: 0
+
+    // Volume of sound
+    property real soundvolume: 0.5
+    property bool playsound: true
 
 
     function showGameMenu(){
@@ -129,9 +134,7 @@ Window {
             nextQuestion()
     }
 
-
     function readSettingsVariables(){
-
 
         if(settings.enableLanguage){
 
@@ -185,6 +188,18 @@ Window {
 
     // QML
     FErrorMessage{ id: error  }
+
+    // Sounds
+    SoundEffect{
+        id: dump
+        source: Qt.resolvedUrl( "qrc:/wav/beep.wav" )
+        volume: soundvolume
+    }
+    SoundEffect{
+        id: slash
+        source: Qt.resolvedUrl( "qrc:/wav/slash.wav" )
+        volume: soundvolume
+    }
 
     // For downloading game data's
     ListModel{ id: downloadmodel }
@@ -412,10 +427,15 @@ Window {
             anchors.left: questionrect.left
             onButtonclicked: {
 
-                if(game.solution === buttonA.buttontext)
+                if(game.solution === buttonA.buttontext){
                     buttonA.startStars()
-                else
-                    nextQuestion() // game.startNextQuestion()
+                    if(playsound)
+                        slash.play()
+                }else{
+                    nextQuestion()
+                    if(playsound)
+                        dump.play()
+                }
 
                 game.setAnswer(buttonA.buttontext)
 
@@ -511,10 +531,8 @@ Window {
             }
 
             Text{ text: second; anchors.centerIn: parent; color: "white" }
-
         }
     }
-
 
     // Game Over
     ParticleSystem {
@@ -600,12 +618,12 @@ Window {
     ListModel{ id: languageModel }
     Rectangle {
         id: settingsrect
-        width: parent.width - 100
+        width: parent.width - 50
         height: parent.height - 100
         color: "white"
         anchors.centerIn: parent
         z:1
-        visible: false
+        visible: true
 
         FButton{
             id: cb
@@ -642,8 +660,32 @@ Window {
                 width: 20
                 height: 20
                 checked: settings.playAudio
+                onClicked: { playsound = sbox.checked }
+            }
 
-                onClicked: { console.log( sbox.checked ) }
+            Text {
+                id: vt
+                text: "Volume:"
+                font.pointSize: 12
+                color: "gray"
+            }
+
+            Slider{
+               id: volumeslider
+               width: parent.width - vt.width - 50
+               from: 0; to: 10
+               stepSize: 0.1
+               snapMode: Slider.SnapAlways
+               onValueChanged: { root.soundvolume = (volumeslider.value/10).toFixed(2) }
+
+               Text {
+                   id: vd
+                   text: volumeslider.value.toFixed(2)
+                   anchors.centerIn: parent
+                   font.pointSize: 12
+                   color: "blue"
+               }
+
             }
 
             Text {

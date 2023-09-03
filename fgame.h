@@ -209,6 +209,8 @@ private:
 
     QString languageCode;
     QString translate(const QString &langCode, const QString &alpha2);
+    QString translateString(const QString &langCode, const QString &source);
+
 
 };
 
