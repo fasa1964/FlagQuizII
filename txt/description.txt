@@ -1,2 +1,2 @@
-This app downloads flags from all knowing countries and some other data's like, countrie size in km2 or captions of countries. After downloading all necessary datas you have to restart this app to finished the setup. When choosing other languages, works only by the option Flags. Feel free to download or change the source code. For further information click on the link below.   
+This app downloads flags from all knowing countries and some other data's like, countrie size in km2 or captions of countries. After downloading all necessary datas you have to restart this app to finished the setup. When choosing other languages, works only by the option Flags and Borders. Feel free to download or change the source code. For further information click on the link below.
  
