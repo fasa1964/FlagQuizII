@@ -31,6 +31,7 @@ qt_add_qml_module(appFlagQuizII
     FErrorMessage.qml
     FGameInit.qml
     FSettings.qml
+    FInformation.qml
     images.qrc
     SOURCES fgamesettings.h fgamesettings.cpp
 

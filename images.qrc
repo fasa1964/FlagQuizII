@@ -26,5 +26,6 @@
         <file>wav/beep.wav</file>
         <file>wav/slash.mp3</file>
         <file>wav/slash.wav</file>
+        <file>FInformation.qml</file>
     </qresource>
 </RCC>
